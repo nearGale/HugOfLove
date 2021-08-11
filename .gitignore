@@ -1,0 +1,4 @@
+$ cat .gitignore
+/Client/*
+!/Client/Assets
+!/Client/ProjectSettings
