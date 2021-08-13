@@ -3,7 +3,7 @@
 
 **Unity Version:** 2020.3.f1c1
 
-**contributors:**
+**Contributors:**
 
 ​	**Designer:**
 
