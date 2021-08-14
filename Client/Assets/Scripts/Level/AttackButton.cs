@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ThatGirl : MonoBehaviour
+public class AttackButton : MonoBehaviour
 {
+    // Start is called before the first frame update
     public LevelManager levelManager = null;
     public Text AttackTimeText = null;
-    // Start is called before the first frame update
     void Start()
     {
         
@@ -17,5 +17,9 @@ public class ThatGirl : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Attack(){
+        levelManager.Attack();
     }
 }
