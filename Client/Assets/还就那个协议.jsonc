@@ -1,0 +1,60 @@
+[
+{
+    //尝试匹配时，客户端发
+    "SendTryMatch": {
+        "MyKey":"",
+        "PlayerName": "PlayerName",
+        "PlayerMail": "PlayerMail"
+    }
+},
+{
+    //匹配成功时，发给双方客户端
+    "MessageMatchSuccess":{
+        "EnemyKey":"",
+        "EnemyName":"",
+        "EnemyMail":""
+    }
+},
+{
+    //生成物品时，发给双方客户端
+    "MessageSpawnItem":{
+        "ItemID":10
+    }
+},
+{
+    //尝试购买物品
+    "SendTryBuyItem":{
+        "MyKey":"",
+        "ItemID":10
+    }
+},
+{
+    //一方购买商品后，发给双方客户端
+    "MessageBuyItemSuccess":{
+        "isSuccess":0,
+        "isEnemySuccess":0
+    }
+},
+{
+    //一方尝试回头时，发给服务器
+    "SendAttack":{
+        "MyKey":"",
+        "AttackTime":0.5
+    }
+},
+{
+    //一方受到攻击时，服务器下发
+    "MessageBeAttacked":{
+        "AttackTime":0.5
+    }
+},
+{
+    //同步双方血量，没想清楚啥时候发
+    "MessageSetBattleInfo":{
+        "PlayerKey":"",
+        "PlayerHP":100,
+        "PlayerAttackTime":1.5
+    }
+}
+
+]
