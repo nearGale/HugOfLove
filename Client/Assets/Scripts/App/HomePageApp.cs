@@ -27,6 +27,6 @@ public class HomePageApp : BasicApp
         playerInfo.mail = mailInputField.text;
         myphone.playerInfo = playerInfo;
 
-        myphone.SwitchNewAppByName("PullApp");
+        myphone.TryStartGame();
     }
 }

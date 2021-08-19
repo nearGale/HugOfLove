@@ -10,7 +10,7 @@ public class BuyItem{
     public string name = "test";
     public int cost = 100;
     public string description = "dddd";
-    public Texture2D Texture = null;
+    public Sprite sprite = null;
 }
 public class BuyApp : BasicApp
 {

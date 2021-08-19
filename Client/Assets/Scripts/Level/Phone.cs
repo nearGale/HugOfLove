@@ -18,6 +18,7 @@ public class AppByName{
     public AppPhoneState state = AppPhoneState.Die;
     public BasicApp aliveApp = null;
     public int AppTargetPos = 0;
+
 }
 
 public class Phone : MonoBehaviour
@@ -41,6 +42,7 @@ public class Phone : MonoBehaviour
 
     public List<AppByName> AppByNames = new List<AppByName>();
     public LevelManager levelManager = null;
+    private Stack<AppByName> AppHistory = new Stack<AppByName>();
     
     public void SwitchNewAppByName(string name){
         Debug.Log("try active:"+name);
@@ -56,6 +58,7 @@ public class Phone : MonoBehaviour
                         if(z.state == AppPhoneState.Active)    z.state = AppPhoneState.Hide;
                     }
                     item.state = AppPhoneState.Active;
+                    AppHistory.Push(item);
                 }else if(item.state == AppPhoneState.Die){
                     Debug.Log("Die active:"+name);
                     GameObject appObject =  Instantiate(item.appObject , new Vector3(100f + item.AppTargetPos*100 , 100f ,0) , new Quaternion());
@@ -75,6 +78,7 @@ public class Phone : MonoBehaviour
                     }
                     item.state = AppPhoneState.Active;
                     item.aliveApp = NowApp;
+                    AppHistory.Push(item);
                 }else if(item.state == AppPhoneState.Active){
                     Debug.Log("APP Already Acitved");
                 }
@@ -84,18 +88,23 @@ public class Phone : MonoBehaviour
         Debug.LogError("APP NOT FOUND:"+name);
         return;
     }
+    public void LockPhone(){
+        SwitchNewAppByName("LockApp");
+    }
+    public void UnLockPhone(){
+        AppHistory.Pop();
+        SwitchNewAppByName(AppHistory.Peek().name);
+    }
     public void WinGame(float point){
         levelManager.playerInfo.AttackTimes++;
     }
 
-    public void HideNowApp(){
-        FormerApp = NowApp;
-        Debug.Log(LockApp);
-        SwitchNewAppByName(LockApp.gameObject.name);
-    }
-
     public void UnHideNowApp(){
         SwitchNewAppByName(FormerApp.AppName);
+    }
+
+    public void TryStartGame(){
+        levelManager.OnMatchSuccess(new ProjectNetWork.MessageMatchSuccess());
     }
 
     

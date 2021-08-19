@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
+
+
 
 [Serializable]
 public class PlayerInfo{
@@ -27,7 +30,14 @@ public class LevelObjects{
     public Canvas UICanvas = null;
 }
 
-public class LevelManager : MonoBehaviour
+public enum GameState{
+    Idle,
+    Matching,
+    InGame,
+    Result
+}
+
+public class LevelManager : EventMono
 {
     public Phone phone = null;
     public ThatGirl thatGirl = null;
@@ -41,9 +51,14 @@ public class LevelManager : MonoBehaviour
 
     public LevelObjects levelObjects = new LevelObjects();
     public AttackButton attackButton = null;
+    GameState nowState = GameState.Idle;
+
+    
+
     // Start is called before the first frame update
-    void Start()
+    override public void Start()
     {
+        base.Start();
         LoadLevelObjects();
     }
 
@@ -59,6 +74,17 @@ public class LevelManager : MonoBehaviour
         attackButton = Instantiate(levelPrefabList.UIAttackButton , parent : levelObjects.UICanvas.transform).GetComponent<AttackButton>();
         attackButton.levelManager = this;
     }
+
+    public void OnMatchSuccess(ProjectNetWork.MessageMatchSuccess messageMatchSuccess){
+        nowState = GameState.InGame;
+        phone.SwitchNewAppByName("BuyApp");
+    }
+
+    public void OnSpawnItem(ProjectNetWork.MessageSpawnItem messageSpawnItem){
+
+    }
+
+
 
 
     // Update is called once per frame

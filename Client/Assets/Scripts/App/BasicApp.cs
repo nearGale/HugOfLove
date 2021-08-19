@@ -36,8 +36,7 @@ public class BasicApp : MonoBehaviour
     }
 
     public virtual void HideApp(){
-        Debug.Log(213213);
-        myphone.HideNowApp();
+        myphone.LockPhone();
     }
 
     // Update is called once per frame

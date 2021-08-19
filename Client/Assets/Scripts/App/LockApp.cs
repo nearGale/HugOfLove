@@ -17,6 +17,6 @@ public class LockApp : BasicApp
     }
 
     public void UnHideNowApp(){
-        myphone.UnHideNowApp();
+        myphone.UnLockPhone();
     }
 }

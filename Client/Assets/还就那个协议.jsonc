@@ -2,15 +2,18 @@
 {
     //尝试匹配时，客户端发
     "SendTryMatch": {
-        "MyKey":"",
         "PlayerName": "PlayerName",
         "PlayerMail": "PlayerMail"
     }
 },
 {
+    "SendAlive":{
+        "PlayerMail":"1111"
+    }
+},
+{
     //匹配成功时，发给双方客户端
     "MessageMatchSuccess":{
-        "EnemyKey":"",
         "EnemyName":"",
         "EnemyMail":""
     }
@@ -31,29 +34,50 @@
 {
     //一方购买商品后，发给双方客户端
     "MessageBuyItemSuccess":{
-        "isSuccess":0,
-        "isEnemySuccess":0
+        "isSuccess":true,
+        "isEnemySuccess":true
     }
 },
 {
     //一方尝试回头时，发给服务器
     "SendAttack":{
-        "MyKey":"",
-        "AttackTime":0.5
+        "MyKey":123
+    }
+},
+{
+    "SendCancelAttack":{
+        "MyKey":123
     }
 },
 {
     //一方受到攻击时，服务器下发
     "MessageBeAttacked":{
-        "AttackTime":0.5
+        "AttackTime":0.5//*1000，int
+    }
+},
+
+{
+    //同步双方战斗信息
+    "MessageSetBattleInfo":{
+        "PlayerKey":"",
+        "PlayerMoney":100,
+        "PlayerAttackTime":1.5
     }
 },
 {
-    //同步双方血量，没想清楚啥时候发
-    "MessageSetBattleInfo":{
-        "PlayerKey":"",
-        "PlayerHP":100,
-        "PlayerAttackTime":1.5
+    "MessageSetBattleResult":{
+        "isWin":true
+    }
+},
+{
+    "SendSetPlayerInfo":{
+
+    }
+},
+{
+    "SendAddMoney":{
+        "PlayerKey":123,
+        "MoneyValue":1000
     }
 }
 
