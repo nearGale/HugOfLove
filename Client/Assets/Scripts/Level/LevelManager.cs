@@ -63,6 +63,7 @@ public class LevelManager : MonoBehaviour
         LoadLevelObjects();
 
         EventCenter.Instance.EventAddListener(EventCenterType.MatchSuccess,OnMatchSuccess);
+        EventCenter.Instance.EventAddListener(EventCenterType.Attacked , OnAttacked);
     }
 
     void LoadLevelObjects(){
@@ -89,8 +90,8 @@ public class LevelManager : MonoBehaviour
         EventCenter.Instance.EventTrigger(EventCenterType.SpawnItemByID , messageSpawnItem.ItemID);
     }
 
-    public void OnAttacked(){
-
+    public void OnAttacked(params object[] data){
+        MessageAttacked messageAttacked = (MessageAttacked)data[0];
     }
 
 
