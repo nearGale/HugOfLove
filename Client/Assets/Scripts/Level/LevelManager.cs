@@ -77,7 +77,7 @@ public class LevelManager : MonoBehaviour
 
     public void OnMatchSuccess(ProjectNetWork.MessageMatchSuccess messageMatchSuccess){
         nowState = GameState.InGame;
-        phone.SwitchNewAppByName("BuyApp");
+        phone.StartNewGame();
     }
 
     public void OnSpawnItem(ProjectNetWork.MessageSpawnItem messageSpawnItem){

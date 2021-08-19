@@ -8,6 +8,8 @@ public class HomePageApp : BasicApp
     public InputField mailInputField = null;
     public PlayerInfo playerInfo = null;
 
+    bool Transiable = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,4 +31,5 @@ public class HomePageApp : BasicApp
 
         myphone.TryStartGame();
     }
+
 }

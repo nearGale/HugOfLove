@@ -44,6 +44,13 @@ public class Phone : MonoBehaviour
     public LevelManager levelManager = null;
     private Stack<AppByName> AppHistory = new Stack<AppByName>();
     
+    BasicApp GetAppInstanceByName(string name){
+        foreach(AppByName item in AppByNames){
+            if(item.name == name)   return item.aliveApp;
+        }
+        return null;
+    }
+
     public void SwitchNewAppByName(string name){
         Debug.Log("try active:"+name);
         foreach(AppByName item in AppByNames){
@@ -88,6 +95,51 @@ public class Phone : MonoBehaviour
         Debug.LogError("APP NOT FOUND:"+name);
         return;
     }
+
+    public void SwitchNewAppByInstance(BasicApp instance){
+        Debug.Log("try active:"+instance);
+        foreach(AppByName item in AppByNames){
+            if (item.aliveApp == instance){
+                if(item.state == AppPhoneState.Hide){
+                    Debug.Log("Hide active:"+instance);
+                    NowApp = item.aliveApp;
+                    ContentTexture.PreviewCamera = NowApp.AppCamera;
+                    Content.texture = NowApp.AppCamera.targetTexture;
+
+                    foreach(AppByName z in AppByNames){
+                        if(z.state == AppPhoneState.Active)    z.state = AppPhoneState.Hide;
+                    }
+                    item.state = AppPhoneState.Active;
+                    AppHistory.Push(item);
+                }else if(item.state == AppPhoneState.Die){
+                    Debug.Log("Die active:"+instance);
+                    GameObject appObject =  Instantiate(item.appObject , new Vector3(100f + item.AppTargetPos*100 , 100f ,0) , new Quaternion());
+                    if(appObject.GetComponent<BasicApp>() == null){
+                        Debug.LogError("wrong app prefab"+item.appObject);
+                        return;
+                    }
+                    NowApp = appObject.GetComponent<BasicApp>();
+                    ContentTexture.PreviewCamera = NowApp.AppCamera;
+                    Content.texture = NowApp.AppCamera.targetTexture;
+
+                    NowApp.myphone = this;
+                    NowApp.StartApp();
+
+                    foreach(AppByName z in AppByNames){
+                        if(z.state == AppPhoneState.Active)    z.state = AppPhoneState.Hide;
+                    }
+                    item.state = AppPhoneState.Active;
+                    item.aliveApp = NowApp;
+                    AppHistory.Push(item);
+                }else if(item.state == AppPhoneState.Active){
+                    Debug.Log("APP Already Acitved");
+                }
+                return;
+            }
+        }
+        Debug.LogError("APP NOT FOUND:"+name);
+        return;
+    }
     public void LockPhone(){
         SwitchNewAppByName("LockApp");
     }
@@ -105,6 +157,10 @@ public class Phone : MonoBehaviour
 
     public void TryStartGame(){
         levelManager.OnMatchSuccess(new ProjectNetWork.MessageMatchSuccess());
+    }
+
+    public void StartNewGame(){
+        NowApp.TransApp(nextApp:GetAppInstanceByName("BuyApp") , ()=>{});
     }
 
     
