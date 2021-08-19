@@ -37,7 +37,7 @@ public enum GameState{
     Result
 }
 
-public class LevelManager : EventMono
+public class LevelManager : MonoBehaviour
 {
     public Phone phone = null;
     public ThatGirl thatGirl = null;
@@ -53,12 +53,12 @@ public class LevelManager : EventMono
     public AttackButton attackButton = null;
     GameState nowState = GameState.Idle;
 
+    float DebugSpawnItemTime = 0;
     
 
     // Start is called before the first frame update
-    override public void Start()
+    public void Start()
     {
-        base.Start();
         LoadLevelObjects();
     }
 
@@ -77,11 +77,11 @@ public class LevelManager : EventMono
 
     public void OnMatchSuccess(ProjectNetWork.MessageMatchSuccess messageMatchSuccess){
         nowState = GameState.InGame;
-        phone.SwitchNewAppByName("BuyApp");
+        phone.StartNewGame();
     }
 
     public void OnSpawnItem(ProjectNetWork.MessageSpawnItem messageSpawnItem){
-
+        EventCenter.Instance.EventTrigger(EventCenterType.SpawnItemByID , messageSpawnItem.ItemID);
     }
 
 
@@ -103,10 +103,14 @@ public class LevelManager : EventMono
                 Invoke("AA",.3f);
             }
         }
-    }
 
-    void AA(){
-        thatGirl.GetComponent<SpriteRenderer>().color = Color.white;
+        if(Time.realtimeSinceStartup - DebugSpawnItemTime > 2){
+            ProjectNetWork.MessageSpawnItem m = new ProjectNetWork.MessageSpawnItem();
+            m.ItemID = (int)( UnityEngine.Random.Range(0,3.9f) );
+            OnSpawnItem( m );
+
+            DebugSpawnItemTime = Time.realtimeSinceStartup;
+        }
     }
 
     public void Attack(){

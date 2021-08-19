@@ -12,10 +12,7 @@ namespace ProjectNetWork{
         public string EnemyName = "Name";
         public string EnemyMail = "1234@garena.cn";
     }
-    public class MessageSpawnItem:BasicAppObject{
-        public int ItemID = 1;
+    public class MessageSpawnItem : BasicNetWorkObject{
+        public int ItemID;
     }
-}
-public class NetWorkObjects : MonoBehaviour
-{
 }
