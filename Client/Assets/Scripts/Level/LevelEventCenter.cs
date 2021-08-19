@@ -6,6 +6,8 @@ using System;
 
 public enum EventCenterType{
     SpawnItemByID,
+    MatchSuccess,
+    Attacked
 
 }
 

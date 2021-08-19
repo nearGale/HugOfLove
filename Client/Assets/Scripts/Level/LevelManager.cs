@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Events;
+using ProjectNetWork;
 
 
 
@@ -60,6 +61,8 @@ public class LevelManager : MonoBehaviour
     public void Start()
     {
         LoadLevelObjects();
+
+        EventCenter.Instance.EventAddListener(EventCenterType.MatchSuccess,OnMatchSuccess);
     }
 
     void LoadLevelObjects(){
@@ -75,13 +78,19 @@ public class LevelManager : MonoBehaviour
         attackButton.levelManager = this;
     }
 
-    public void OnMatchSuccess(ProjectNetWork.MessageMatchSuccess messageMatchSuccess){
+    public void OnMatchSuccess(params object[] data){
+        MessageMatchSuccess messageMatchSuccess = (MessageMatchSuccess)data[0];
         nowState = GameState.InGame;
         phone.StartNewGame();
     }
 
-    public void OnSpawnItem(ProjectNetWork.MessageSpawnItem messageSpawnItem){
+    public void OnSpawnItem(params object[] data){
+        MessageSpawnItem messageSpawnItem = (MessageSpawnItem)data[0];
         EventCenter.Instance.EventTrigger(EventCenterType.SpawnItemByID , messageSpawnItem.ItemID);
+    }
+
+    public void OnAttacked(){
+
     }
 
 
@@ -104,8 +113,8 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if(Time.realtimeSinceStartup - DebugSpawnItemTime > 2){
-            ProjectNetWork.MessageSpawnItem m = new ProjectNetWork.MessageSpawnItem();
+        if(Time.realtimeSinceStartup - DebugSpawnItemTime > 4){
+            ProjectNetWork.MessageSpawnItem m = new MessageSpawnItem();
             m.ItemID = (int)( UnityEngine.Random.Range(0,3.9f) );
             OnSpawnItem( m );
 

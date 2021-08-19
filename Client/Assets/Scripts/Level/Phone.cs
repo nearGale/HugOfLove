@@ -155,10 +155,6 @@ public class Phone : MonoBehaviour
         SwitchNewAppByName(FormerApp.AppName);
     }
 
-    public void TryStartGame(){
-        levelManager.OnMatchSuccess(new ProjectNetWork.MessageMatchSuccess());
-    }
-
     public void StartNewGame(){
         NowApp.TransApp(nextApp:GetAppInstanceByName("BuyApp") , ()=>{});
     }

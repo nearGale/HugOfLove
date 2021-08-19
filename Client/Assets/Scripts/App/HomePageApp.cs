@@ -29,7 +29,7 @@ public class HomePageApp : BasicApp
         playerInfo.mail = mailInputField.text;
         myphone.playerInfo = playerInfo;
 
-        myphone.TryStartGame();
+        EventCenter.Instance.EventTrigger(EventCenterType.MatchSuccess , new ProjectNetWork.MessageMatchSuccess());
     }
 
 }

@@ -15,4 +15,8 @@ namespace ProjectNetWork{
     public class MessageSpawnItem : BasicNetWorkObject{
         public int ItemID;
     }
+
+    public class MessageAttacked : BasicNetWorkObject{
+        
+    }
 }
