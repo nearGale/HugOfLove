@@ -19,7 +19,7 @@ public class BuyApp : BasicApp
     // Start is called before the first frame update
     void Start()
     {
-        SpawnItemByID(0);
+        EventCenter.Instance.EventAddListener(EventCenterType.SpawnItemByID, SpawnItemByID);
     }
 
     // Update is called once per frame
@@ -28,10 +28,10 @@ public class BuyApp : BasicApp
         
     }
 
-    public void SpawnItemByID(int ItemID){
+    public void SpawnItemByID(params object[] data){
         foreach (BuyItem item in RawBuyItemList)
         {
-            if(item.ID == ItemID){
+            if(item.ID == (int)data[0]){
                 itemDisplayBox.ShowRawItem(item);
                 return;
             }

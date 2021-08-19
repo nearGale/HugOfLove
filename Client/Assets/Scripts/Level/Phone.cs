@@ -135,7 +135,7 @@ public class Phone : MonoBehaviour
         bool isRect = RectTransformUtility.ScreenPointToLocalPointInRectangle(UICanvasRect, ContentScreenPoint , MainCamera , out ContentPos);
         if(isRect){
             ContentRect.anchoredPosition = ContentPos;
-            //ContentRect.localScale = transform.localScale;
+            ContentRect.localScale = transform.localScale;
             ContentRect.rotation = transform.rotation;
         }
     }
