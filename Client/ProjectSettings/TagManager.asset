@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackGround
+    uniqueID: 4222627587
+    locked: 0
+  - name: CellPhone
+    uniqueID: 3238746549
+    locked: 0
+  - name: ActorBack
+    uniqueID: 923265253
+    locked: 0
+  - name: ActorReturn
+    uniqueID: 2217882237
+    locked: 0
+  - name: Button
+    uniqueID: 2364014923
+    locked: 0
