@@ -38,6 +38,11 @@ public class net : MonoBehaviour
     public Text EnemyPlayerName;
     public Text MyPlayerName;
 
+
+    public Image MyPlayerPic;
+    public Image EnemyPlayerPic;
+
+
     public Text ItemDesc;
     public Image ItemPic;
     // Start is called before the first frame update
@@ -86,6 +91,16 @@ public class net : MonoBehaviour
         LevelManagerNetTest.Instance.nowState = LevelState.Matching;
         Send(netMessage);
     }
+
+    static void TryLogin(){
+        NetMessage netMessage = new NetMessage();  
+
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogintwo_LoveCmd;
+        Send(netMessage);
+    }
+
     void Update()
     {
         if(Time.timeSinceLevelLoad - AliveSendTime > 3){
@@ -124,6 +139,14 @@ public class net : MonoBehaviour
                 }
                 break;
             case NetWorkMessageIndex.MessageBeAttacked_LoveCmd:
+                if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
+                    EnemyPlayerPic.color = Color.green;
+                }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
+                    MyPlayerPic.color = Color.green;
+                }
+                Invoke("TTT",2f);
+                break;
+            
 
             default:break;
         }
@@ -131,6 +154,10 @@ public class net : MonoBehaviour
 
     public void TT(){
         ItemPic.color = Color.white;
+    }
+    public void TTT(){
+        EnemyPlayerPic.color = Color.white;
+        MyPlayerPic.color = Color.white;
     }
 
     public void SendAlive(){
@@ -165,15 +192,6 @@ public class net : MonoBehaviour
 
             Debug.Log(e);
         }
-    }
-
-    static void TryLogin(){
-        NetMessage netMessage = new NetMessage();  
-
-        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
-        netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
-        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogintwo_LoveCmd;
-        Send(netMessage);
     }
 
 　　 /// <summary>

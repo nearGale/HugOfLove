@@ -68,6 +68,10 @@ namespace ProjectNetWork{
                 case NetWorkMessageIndex.ReqSendTryMatch_LoveCmd:
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
+                case NetWorkMessageIndex.ReqSendTryBuyItem_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\",";
+                    str += "\"ItemID\":"+netMessage.ItemID.ToString()+"";
+                    break;
                 default:break;
             }
             return str;
