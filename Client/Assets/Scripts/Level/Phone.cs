@@ -52,6 +52,7 @@ public class Phone : MonoBehaviour
     }
 
     public void SwitchNewAppByName(string name){
+        Debug.Log(ContentTexture);
         Debug.Log("try active:"+name);
         foreach(AppByName item in AppByNames){
             if (item.name == name){
@@ -74,6 +75,7 @@ public class Phone : MonoBehaviour
                         return;
                     }
                     NowApp = appObject.GetComponent<BasicApp>();
+                    Debug.Log(ContentTexture);
                     ContentTexture.PreviewCamera = NowApp.AppCamera;
                     Content.texture = NowApp.AppCamera.targetTexture;
 
@@ -162,7 +164,8 @@ public class Phone : MonoBehaviour
     
     void Start()
     {
-    
+        Debug.Log(ContentTexture);
+
         UICanvasRect = UICanvas.GetComponent<RectTransform>();
         ContentRect = Content.GetComponent<RectTransform>();
         ContentTexture = Content.GetComponent<PhoneRenderTexture>();

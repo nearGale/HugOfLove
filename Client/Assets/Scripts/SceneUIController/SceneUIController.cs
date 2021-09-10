@@ -183,6 +183,7 @@ public class SceneUIController : MonoBehaviour
             m_ReturnChecked = false;
 
             DataManager.Instance.ClearReturnDuration(PlayerId.Left);
+
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 [Serializable]
 public class BuyItem{
@@ -15,7 +16,12 @@ public class BuyItem{
 public class BuyApp : BasicApp
 {
     public List<BuyItem> RawBuyItemList = new List<BuyItem>(); 
-    public ItemDisplayBox itemDisplayBox = null;
+    public Text Price = null;
+    public Text ItemText = null;
+    public Text CountDown = null;
+    public Image ItemImage = null;
+
+    float itemCountDown = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +38,8 @@ public class BuyApp : BasicApp
         foreach (BuyItem item in RawBuyItemList)
         {
             if(item.ID == (int)data[0]){
-                itemDisplayBox.ShowRawItem(item);
+                Price.text = item.cost.ToString();
+                ItemText.text = item.name;
                 return;
             }
         }

@@ -1,84 +1,131 @@
 [
 {
-    //尝试匹配时，客户端发
-    "SendTryMatch": {
+    "ReqPlayerLogin": {
         "PlayerName": "PlayerName",
         "PlayerMail": "PlayerMail"
     }
 },
 {
-    "SendAlive":{
+    //尝试匹配时，客户端发
+    "ReqSendTryMatch": {
+        "PlayerMail": "PlayerMail"
+    }
+},
+{
+    //心跳
+    "ReqSendAlive":{
         "PlayerMail":"1111"
     }
 },
 {
     //匹配成功时，发给双方客户端
-    "MessageMatchSuccess":{
+    "RetMatchSuccess":{
         "EnemyName":"",
         "EnemyMail":""
     }
 },
 {
     //生成物品时，发给双方客户端
-    "MessageSpawnItem":{
+    "RetSpawnItem":{
         "ItemID":10
     }
 },
 {
     //尝试购买物品
-    "SendTryBuyItem":{
-        "MyKey":"",
+    "ReqTryBuyItem":{
+        "PlayerMail":"",
         "ItemID":10
     }
 },
 {
     //一方购买商品后，发给双方客户端
-    "MessageBuyItemSuccess":{
+    "RetBuyItemSuccess":{
         "isSuccess":true,
         "isEnemySuccess":true
     }
 },
 {
     //一方尝试回头时，发给服务器
-    "SendAttack":{
-        "MyKey":123
+    "ReqAttack":{
+        "PlayerMail":123
     }
 },
 {
-    "SendCancelAttack":{
-        "MyKey":123
+    //一方回头时，服务器回包。
+    "RetReqAttackReceived":{
+        "PlayerKey":123
     }
 },
 {
-    //一方受到攻击时，服务器下发
-    "MessageBeAttacked":{
-        "AttackTime":0.5//*1000，int
+    //客户端点击取消回头
+    "ReqCancelAttack":{
+        "PlayerMail":123
     }
 },
-
+{
+    //一方息屏（客户端CD）
+    "ReqShutScreen":{
+        "PlayerMail":123
+    }
+},
+{
+    //息屏回包
+    "RetShutScreenReceived":{
+        "PlayerMail":123
+    }
+},
+{
+    //一方亮屏（客户端CD）
+    "ReqLightScreen":{
+        "PlayerMail":123
+    }
+},
+{
+    //亮屏回包
+    "RetLightScreenReceived":{
+        "PlayerMail":123
+    }
+},
+{
+    //倒计时结束或受到取消请求时，回双方
+    "RetCancelAttack":{
+        "PlayerMail":123
+    }
+},
+{
+    //对方回头且己方未息屏时，服务器下发
+    "RetBeAttacked":{
+        "PlayerMail":123
+    }
+},
 {
     //同步双方战斗信息
-    "MessageSetBattleInfo":{
-        "PlayerKey":"",
-        "PlayerMoney":100,
-        "PlayerAttackTime":1.5
+    "RetSetBattleInfo":{
+        "Player1":{},
+        "Player2":{}
     }
 },
 {
-    "MessageSetBattleResult":{
+    //结算
+    "RetSetBattleResult":{
         "isWin":true
     }
 },
 {
-    "SendSetPlayerInfo":{
-
+    //玩家信息类
+    "Player":{
+        "Key":120,
+        "Money":120,
+        "AttackTime":1000//*1000
     }
 },
 {
-    "SendAddMoney":{
-        "PlayerKey":123,
-        "MoneyValue":1000
+    "NetMessage":{
+        "MessageType":1,
+        "MessageIndex":1,
+        "PlayerName":"xxx",
+        "PlayerMail":"xxx@xx",
+        "ItemID":213
     }
 }
-
 ]
