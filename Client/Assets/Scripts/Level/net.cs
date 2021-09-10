@@ -94,7 +94,8 @@ public class net : MonoBehaviour
             //if(LevelManagerNetTest.Instance.nowState == LevelState.Matching) SendAlive();
         }
 
-        
+        LevelManagerNetTest.Instance.MyPlayerMail = MailInput.text;
+        LevelManagerNetTest.Instance.MyPlayerName = NameInput.text;
     }
 
     public void OnMessageReceive(params object[] data){
