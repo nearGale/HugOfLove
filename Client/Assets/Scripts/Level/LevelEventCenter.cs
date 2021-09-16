@@ -10,7 +10,8 @@ public enum EventCenterType{
     Attacked,
 
     RefreshItem,
-    OnMessageReceive
+    OnMessageReceive,
+    NetLog
 
 }
 

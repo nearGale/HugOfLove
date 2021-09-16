@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;//引入socket命名空间
 using System.Threading;
 using System.Text;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using ProjectNetWork;
 
@@ -22,45 +23,84 @@ public class LevelManagerNetTest : Single<LevelManagerNetTest>
     public string EnemyPlayerMail;
     public string EnemyPlayerName;
     public int NowItemID;
+    public bool IsMyScreenShut;
+    public bool IsAttacking;
 
+    public Queue DebugQueue = new Queue();
+
+}
+
+public static class netDebug{
+    public struct _Log{
+        public string message;
+        public string stackTrace;
+        public LogType type;
+    }
+    public static void Log(string m , string s , LogType t){
+        LevelManagerNetTest.Instance.DebugQueue.Enqueue(new _Log{message = m , stackTrace = s , type = t});
+    }
 }
 
 public class net : MonoBehaviour
 {
     float AliveSendTime = 0;
 
+    public Queue MessageQueue = new Queue();
     public Button SendTryMatch;
     public Button TryConnect;
     public Button Buy;
     public Button Attack;
+    public Button Shut;
     public InputField NameInput;
     public InputField MailInput;
     public Text EnemyPlayerName;
     public Text MyPlayerName;
+    public Text NowStat;
 
 
     public Image MyPlayerPic;
     public Image EnemyPlayerPic;
+    public Image ShutPic;
 
 
     public Text ItemDesc;
     public Image ItemPic;
+
+    public Text NetDebugBox;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
         LevelManagerNetTest.Instance.nowState = LevelState.Idle;
+        LevelManagerNetTest.Instance.IsMyScreenShut = false;
+        LevelManagerNetTest.Instance.IsAttacking = false;
 
         AliveSendTime = Time.timeSinceLevelLoad;
 
-        EventCenter.Instance.EventAddListener(EventCenterType.OnMessageReceive,OnMessageReceive);
+        EventCenter.Instance.EventAddListener(EventCenterType.OnMessageReceive,EnqueueMessage);
 
         SendTryMatch.onClick.AddListener(TryMatch);
         TryConnect.onClick.AddListener(TryConnectServer);
         Buy.onClick.AddListener(TryBuyItem);
         Attack.onClick.AddListener(TryAttack);
+        Shut.onClick.AddListener(TryShut);
+
+        //Application.logMessageReceived += netDebug.Log;
+
     }
 
+    void EnqueueMessage(params object[] data){
+        NetMessage netMessage = (NetMessage)data[0];
+        MessageQueue.Enqueue(netMessage);
+    }
+    void TryShut(){
+        NetMessage netMessage = new NetMessage();
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.MessageIndex = LevelManagerNetTest.Instance.IsMyScreenShut?NetWorkMessageIndex.ReqLightScreen_LoveCmd:NetWorkMessageIndex.ReqShutScreen_LoveCmd;
+
+        Send(netMessage);
+    }
     void TryConnectServer(){
         Thread c_thread = new Thread(ConnectServer);
         c_thread.IsBackground = true;
@@ -97,7 +137,7 @@ public class net : MonoBehaviour
 
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
         netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
-        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogintwo_LoveCmd;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogin_LoveCmd;
         Send(netMessage);
     }
 
@@ -109,13 +149,31 @@ public class net : MonoBehaviour
             //if(LevelManagerNetTest.Instance.nowState == LevelState.Matching) SendAlive();
         }
 
+        ShutPic.enabled = LevelManagerNetTest.Instance.IsMyScreenShut;
+
         LevelManagerNetTest.Instance.MyPlayerMail = MailInput.text;
         LevelManagerNetTest.Instance.MyPlayerName = NameInput.text;
+
+        MyPlayerName.text = LevelManagerNetTest.Instance.MyPlayerName;
+
+        NowStat.text = LevelManagerNetTest.Instance.nowState.ToString();
+
+        Attack.GetComponentInChildren<Text>().text = LevelManagerNetTest.Instance.IsAttacking ? "取消攻击" : "攻击";
+
+        while(MessageQueue.Count>0){
+            OnMessageReceive((NetMessage)MessageQueue.Dequeue());
+        }
+
+        while(LevelManagerNetTest.Instance.DebugQueue.Count >0){
+            NetDebugBox.text = ((netDebug._Log)(LevelManagerNetTest.Instance.DebugQueue.Peek())).message.ToString() + "\n" + NetDebugBox.text;
+            Application.logMessageReceived -= netDebug.Log;
+            //Debug.Log(((netDebug._Log)(LevelManagerNetTest.Instance.DebugQueue.Dequeue())).message.ToString());
+            Application.logMessageReceived += netDebug.Log;
+        }
     }
 
-    public void OnMessageReceive(params object[] data){
-        NetMessage netMessage = (NetMessage)data[0];
-        Debug.Log(netMessage.MessageIndex);
+    public void OnMessageReceive(NetMessage netMessage){
+        //NetMessage netMessage = (NetMessage)data[0];
         switch (netMessage.MessageIndex)
         {
             case NetWorkMessageIndex.RetMessageMatchSuccess_LoveCmd:
@@ -124,16 +182,20 @@ public class net : MonoBehaviour
                 LevelManagerNetTest.Instance.EnemyPlayerName = netMessage.EnemyName;
                 EnemyPlayerName.text = "ene:"+LevelManagerNetTest.Instance.EnemyPlayerName;
                 break;
-            case NetWorkMessageIndex.MessageSpawnItem_LoveCmd:
+            case NetWorkMessageIndex.RetMessageSpawnItem_LoveCmd:
                 LevelManagerNetTest.Instance.NowItemID = ((int)netMessage.ItemID);
                 ItemDesc.text = "item:"+netMessage.ItemID.ToString();
                 break;
-            case NetWorkMessageIndex.MessageBuyItemSuccess_LoveCmd:
-                if(netMessage.isSuccess){
+            case NetWorkMessageIndex.RetMessageBuyItemSuccess_LoveCmd:
+                Debug.Log(string.Format("ME:{0},{1}" , netMessage.IsSuccess.GetType() , netMessage.IsSuccess));
+                Debug.Log(string.Format("ENEMY:{0},{1}" , netMessage.IsEnemySuccess.GetType() , netMessage.IsEnemySuccess));
+                if(netMessage.IsSuccess){
+                    Debug.Log("I success");
                     ItemPic.color = Color.blue;
                     Invoke("TT",2f);
                 }
-                if(netMessage.isEnemySuccess){
+                if(netMessage.IsEnemySuccess){
+                    Debug.Log("Enemy Success");
                     ItemPic.color = Color.red;
                     Invoke("TT",2f);
                 }
@@ -143,8 +205,15 @@ public class net : MonoBehaviour
                     EnemyPlayerPic.color = Color.green;
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
                     MyPlayerPic.color = Color.green;
+                    LevelManagerNetTest.Instance.IsAttacking = true;
                 }
                 Invoke("TTT",2f);
+                break;
+            case NetWorkMessageIndex.ReqCancelAttack_LoveCmd:
+                if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
+                    LevelManagerNetTest.Instance.IsAttacking = false;
+                }
+                TTT();
                 break;
             
 
@@ -227,9 +296,8 @@ public class net : MonoBehaviour
     {
        // try
        // {
-            Debug.Log(msgobj.MessageIndex);
             byte[] buffer = new byte[1024];
-            Debug.Log(NetWorkUtility.toNetStr(msgobj));
+            Debug.Log("Send" + NetWorkUtility.toNetStr(msgobj));
             buffer = Encoding.UTF8.GetBytes(NetWorkUtility.toNetStr(msgobj));
             socket_client.Send(buffer);
       //  }

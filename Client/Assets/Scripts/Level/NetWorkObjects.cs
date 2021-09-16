@@ -5,18 +5,20 @@ using UnityEngine;
 
 namespace ProjectNetWork{
     public enum NetWorkMessageIndex{
-        ReqSendTryMatch_LoveCmd  			=1,
-	    RetMessageMatchSuccess_LoveCmd 	 =2,
-	    MessageSpawnItem_LoveCmd 		 =3,
-	    ReqSendTryBuyItem_LoveCmd		 =4,
-	    MessageBuyItemSuccess_LoveCmd 	 =5,
-	    ReqAttack_LoveCmd 				 =6,
-	    MessageBeAttacked_LoveCmd		 =7,
-	    MessageSetBattleInfo_LoveCmd	 =8,
-	    ReqShutScreen_LoveCmd			 =9,
-	    ReqLightScreen_LoveCmd			 =10,
-	    ReqCancelAttack_LoveCmd			=11,
-        ReqPlayerLogintwo_LoveCmd 			=12
+    ReqSendTryMatch_LoveCmd  		=1,
+	RetMessageMatchSuccess_LoveCmd 	=2,
+	RetPlayerLogin_LoveCmd			=3,
+	ReqSendTryBuyItem_LoveCmd		=4,
+	RetMessageSpawnItem_LoveCmd		=5,
+	ReqAttack_LoveCmd 				=6,
+	MessageBeAttacked_LoveCmd		=7,
+	MessageSetBattleInfo_LoveCmd	=8,
+	ReqShutScreen_LoveCmd			=9,
+	ReqLightScreen_LoveCmd			=10,
+	ReqCancelAttack_LoveCmd			=11,
+	ReqPlayerLogin_LoveCmd			=12,
+	RetMessageBuyItemSuccess_LoveCmd=13
+
 
     }
 
@@ -43,8 +45,8 @@ namespace ProjectNetWork{
         public string PlayerMail;
         public string EnemyName;
         public string EnemyMail;
-        public bool isSuccess;
-        public bool isEnemySuccess;
+        public bool IsSuccess;
+        public bool IsEnemySuccess;
         public string isWin;
         public int ItemID;
         public PlayerInfo Player1;
@@ -61,7 +63,7 @@ namespace ProjectNetWork{
             string str = ",";
             switch (netMessage.MessageIndex)
             {
-                case NetWorkMessageIndex.ReqPlayerLogintwo_LoveCmd:
+                case NetWorkMessageIndex.ReqPlayerLogin_LoveCmd:
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\",";
                     str += "\"PlayerName\":\""+netMessage.PlayerName.ToString()+"\"";
                     break;
@@ -72,7 +74,18 @@ namespace ProjectNetWork{
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\",";
                     str += "\"ItemID\":"+netMessage.ItemID.ToString()+"";
                     break;
-                default:break;
+                case NetWorkMessageIndex.ReqAttack_LoveCmd:
+                    str = "";
+                    break;
+                case NetWorkMessageIndex.ReqShutScreen_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString();
+                    break;
+                case NetWorkMessageIndex.ReqLightScreen_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString();
+                    break;
+                default:
+                    str = "";
+                    break;
             }
             return str;
         }
