@@ -5,19 +5,23 @@ using UnityEngine;
 
 namespace ProjectNetWork{
     public enum NetWorkMessageIndex{
-    ReqSendTryMatch_LoveCmd  		=1,
-	RetMessageMatchSuccess_LoveCmd 	=2,
-	RetPlayerLogin_LoveCmd			=3,
-	ReqSendTryBuyItem_LoveCmd		=4,
-	RetMessageSpawnItem_LoveCmd		=5,
-	ReqAttack_LoveCmd 				=6,
-	MessageBeAttacked_LoveCmd		=7,
-	MessageSetBattleInfo_LoveCmd	=8,
-	ReqShutScreen_LoveCmd			=9,
-	ReqLightScreen_LoveCmd			=10,
-	ReqCancelAttack_LoveCmd			=11,
-	ReqPlayerLogin_LoveCmd			=12,
-	RetMessageBuyItemSuccess_LoveCmd=13
+        ReqSendTryMatch_LoveCmd  		=1,
+	    RetMessageMatchSuccess_LoveCmd 	=2,
+	    RetPlayerLogin_LoveCmd			=3,
+	    ReqSendTryBuyItem_LoveCmd		=4,
+	    RetMessageSpawnItem_LoveCmd		=5,
+	    ReqAttack_LoveCmd 				=6,
+	    MessageBeAttacked_LoveCmd		=7,
+	    MessageSetBattleInfo_LoveCmd	=8,
+	    ReqShutScreen_LoveCmd			=9,
+	    ReqLightScreen_LoveCmd			=10,
+	    ReqCancelAttack_LoveCmd			=11,
+	    ReqPlayerLogin_LoveCmd			=12,
+	    RetMessageBuyItemSuccess_LoveCmd=13,
+        RetShutScreenReceived = 14,
+        RetLightScreenReceived =15,
+        RetAttackReceived = 16,
+        RetCancelAttackReceived_LoveCmd	=17
 
 
     }
@@ -75,13 +79,16 @@ namespace ProjectNetWork{
                     str += "\"ItemID\":"+netMessage.ItemID.ToString()+"";
                     break;
                 case NetWorkMessageIndex.ReqAttack_LoveCmd:
-                    str = "";
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 case NetWorkMessageIndex.ReqShutScreen_LoveCmd:
-                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString();
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 case NetWorkMessageIndex.ReqLightScreen_LoveCmd:
-                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString();
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
+                    break;
+                case NetWorkMessageIndex.ReqCancelAttack_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 default:
                     str = "";

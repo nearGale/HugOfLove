@@ -25,7 +25,6 @@ public struct DebugInGame{
     public InputField InputFieldPlayerName;
     public InputField InputFieldPlayerMail;
     public Text TextNowStat;
-    public Text TextDebugInfo;
     public Button ButtonTryMatch;
     public Button ButtonTryConnect;
 }
@@ -41,7 +40,6 @@ public class UIManagerNetTest : MonoBehaviour
     public Image MyPic;
     public Text TextEnemyName;
     public Text TextMyName;
-    public Image ImageShutMask;
     
     // Start is called before the first frame update
     void Start()
