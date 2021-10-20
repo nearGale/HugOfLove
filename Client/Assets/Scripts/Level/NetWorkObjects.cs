@@ -5,23 +5,27 @@ using UnityEngine;
 
 namespace ProjectNetWork{
     public enum NetWorkMessageIndex{
-        ReqSendTryMatch_LoveCmd  		=1,
-	    RetMessageMatchSuccess_LoveCmd 	=2,
-	    RetPlayerLogin_LoveCmd			=3,
-	    ReqSendTryBuyItem_LoveCmd		=4,
-	    RetMessageSpawnItem_LoveCmd		=5,
-	    ReqAttack_LoveCmd 				=6,
-	    MessageBeAttacked_LoveCmd		=7,
-	    MessageSetBattleInfo_LoveCmd	=8,
-	    ReqShutScreen_LoveCmd			=9,
-	    ReqLightScreen_LoveCmd			=10,
-	    ReqCancelAttack_LoveCmd			=11,
-	    ReqPlayerLogin_LoveCmd			=12,
-	    RetMessageBuyItemSuccess_LoveCmd=13,
-        RetShutScreenReceived = 14,
-        RetLightScreenReceived =15,
-        RetAttackReceived = 16,
-        RetCancelAttackReceived_LoveCmd	=17
+        ReqSendTryMatch_LoveCmd  	=1,
+	RetMessageMatchSuccess_LoveCmd 	 =2,
+	RetPlayerLogin_LoveCmd			=3,
+	ReqSendTryBuyItem_LoveCmd		 =4,
+	RetMessageSpawnItem_LoveCmd		=5,
+	ReqAttack_LoveCmd 				 =6,
+	RetLookBackSuccess_LoveCmd		 =7,
+	RetMessageSetBattleInfo_LoveCmd	 =8,
+	ReqShutScreen_LoveCmd			 =9,
+	ReqLightScreen_LoveCmd			 =10,
+	ReqCancelAttack_LoveCmd			=11,
+	ReqPlayerLogin_LoveCmd			=12,
+	RetMessageBuyItemSuccess_LoveCmd =13,
+	RetShutScreenReceived_LoveCmd =14,
+	RetLightScreenReceived_LoveCmd =15,
+	RetAttackReceived_LoveCmd		=16,
+	RetCancelAttackReceived_LoveCmd	=17,
+	ReqHeartBag_LoveCmd				=18,
+	RetSetPlayerInfo_LoveCmd		=19,
+	RetBlockSuccess_LoveCmd			=20
+
 
 
     }
@@ -29,12 +33,13 @@ namespace ProjectNetWork{
     public enum NetWorkMessageType{
         LoveCmd = 5
     }
+    [System.Serializable]
     public class PlayerInfo{
-        public string Mail = "xxx@garena.cn";
+        public string PlayerMail = "xxx@garena.cn";
         public int Money = 0;
-        public int AttackTime = 0;
+        public int LookBackTime = 0;//在原来基础上×100000
     }
-
+    [System.Serializable]
     public class NetMessageVar<T>{
         public string _name;
         public T _object;
@@ -42,6 +47,7 @@ namespace ProjectNetWork{
 
         }
     }
+    [System.Serializable]
     public class NetMessage{
         public NetWorkMessageType MessageType = NetWorkMessageType.LoveCmd;
         public NetWorkMessageIndex MessageIndex;
@@ -53,8 +59,8 @@ namespace ProjectNetWork{
         public bool IsEnemySuccess;
         public string isWin;
         public int ItemID;
-        public PlayerInfo Player1;
-        public PlayerInfo Player2;
+        public PlayerInfo PlayerOne;
+        public PlayerInfo PlayerTwo;
         public string templetStr = "{{\"MessageType\":{0},\"MessageIndex\":{1}{2}}}";
     }
 
@@ -88,6 +94,9 @@ namespace ProjectNetWork{
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 case NetWorkMessageIndex.ReqCancelAttack_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
+                    break;
+                case NetWorkMessageIndex.ReqHeartBag_LoveCmd:
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 default:

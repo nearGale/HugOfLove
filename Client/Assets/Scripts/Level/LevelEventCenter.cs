@@ -11,7 +11,10 @@ public enum EventCenterType{
 
     RefreshItem,
     OnMessageReceive,
-    NetLog
+    NetLog,
+    QuitMiniGame,
+    SuccessMiniGame,
+    TryBuyItem
 
 }
 

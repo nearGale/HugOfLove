@@ -2,15 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class ShopItem
-{
-    public Sprite Icon;
-    public string Description;
-    public int Price;
-}
-
-
 public class ShopItemController : MonoSingleton<ShopItemController>
 {
     [SerializeField]
