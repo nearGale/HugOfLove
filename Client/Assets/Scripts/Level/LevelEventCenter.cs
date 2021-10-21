@@ -14,7 +14,7 @@ public enum EventCenterType{
     NetLog,
     QuitMiniGame,
     SuccessMiniGame,
-    TryBuyItem
+    BlockSuccess
 
 }
 

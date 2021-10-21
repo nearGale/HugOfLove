@@ -21,7 +21,7 @@ public class MiniGameObserver : MonoBehaviour
         
     }
     public void OnMiniGameSuccess(params object[] data){
-        EventCenter.Instance.EventTrigger(EventCenterType.TryBuyItem);
+        EventCenter.Instance.EventTrigger(EventCenterType.BlockSuccess);
     }
 
     public void StartRandomMiniGame(){

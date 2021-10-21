@@ -24,6 +24,14 @@ public class PhoneInGame{
 }
 
 [System.Serializable]
+public class PhoneInGameEnemy{
+    public RectTransform RootTransform;
+    public Animator NowScreenState;
+    public Text Money;
+    public Text AttackTime;
+}
+
+[System.Serializable]
 public struct AttackButtonInGame{
     public Button ButtonAttack;
     public Text TextAttackTime;
@@ -37,21 +45,14 @@ public class UIManagerNetTest : MonoBehaviour
 {
     public PhoneInGame PlayerPhone = new PhoneInGame();
     public PhoneInGame EnemyPhone = new PhoneInGame();
-    public AttackButtonInGame PlayerAttackButton;
-    public AttackButtonInGame EnemyAttackButton;
-    public DebugInGame debugInGame;
     public Image EnemyPic;
     public Image MyPic;
     public Text TextEnemyName;
     public Text TextMyName;
-    public Light LightSelf;
-    public Light LightEnemy;
 
     public Animator GlobalMask;
     public Animator EnemyCharacter;
     public Animator SelfCharacter;
-    float LightSelfStartIntersity;
-    float LightEnemyStartIntersity;
 
     public Text PagePlayerName;
     public Text PagePlayerMoney;
@@ -60,8 +61,10 @@ public class UIManagerNetTest : MonoBehaviour
 
     Animator EnemyMoneyBeat;
     public Text TextEnemyMoneyBeat;
+    public Text TextEnemyMoney;
     Animator MyMoneyBeat;
     public Text TextMyMoneyBeat;
+    public Text TextMyMoney;
     Animator ItemAnimator; 
 
     Vector3 PlayerPhoneStartPos;
@@ -120,11 +123,11 @@ public class UIManagerNetTest : MonoBehaviour
     public void SetPlayerInfo(bool isSelf , int deltaMoney){
         string d = deltaMoney >= 0 ?"+":"-" + deltaMoney.ToString();
         if(isSelf){
-            MyMoneyBeat.SetTrigger("beat");
+            MyMoneyBeat.SetTrigger("Beat");
             TextMyMoneyBeat.text = d;
             PlayerPhone.TextNowMoney.text = "$" + LevelManagerNetTest.Instance.MyPlayerInfo.Money.ToString();
         }else{
-            EnemyMoneyBeat.SetTrigger("beat");
+            EnemyMoneyBeat.SetTrigger("Beat");
             TextEnemyMoneyBeat.text = d;
             PagePlayerMoney.text = "她好像还剩……" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
         }
@@ -156,16 +159,13 @@ public class UIManagerNetTest : MonoBehaviour
     void Start()
     {
         //StartBlockCountDown();
-        EnemyMoneyBeat = TextEnemyMoneyBeat.GetComponent<Animator>();
-        MyMoneyBeat = TextMyMoneyBeat.GetComponent<Animator>();
+        EnemyMoneyBeat = TextEnemyMoney.GetComponent<Animator>();
+        MyMoneyBeat = TextMyMoney.GetComponent<Animator>();
 
         ItemAnimator = PlayerPhone.ImageItemPic.GetComponent<Animator>();
 
         PlayerPhoneStartPos = PlayerPhone.RootTransform.position;
         PlayerPhoneStartRotation  = PlayerPhone.RootTransform.rotation.eulerAngles;
-
-        LightEnemyStartIntersity = LightEnemy.intensity;
-        LightSelfStartIntersity = LightSelf.intensity;
     }
 
     // Update is called once per frame
@@ -179,11 +179,10 @@ public class UIManagerNetTest : MonoBehaviour
         //    if(a==0) isBlockCountDown = false;
         //}
 
-        PlayerPhone.RootTransform.position = new Vector3(PlayerPhoneStartPos.x + PhoneWingleSpeed * Mathf.Sin(0.8f * Time.timeSinceLevelLoad) , PlayerPhoneStartPos.y - PhoneWingleSpeed * Mathf.Sin(0.42f * Time.timeSinceLevelLoad) , 0);
+        //PlayerPhone.RootTransform.position = new Vector3(PlayerPhoneStartPos.x + PhoneWingleSpeed * Mathf.Sin(0.8f * Time.timeSinceLevelLoad) , PlayerPhoneStartPos.y - PhoneWingleSpeed * Mathf.Sin(0.42f * Time.timeSinceLevelLoad) , 0);
         PlayerPhone.RootTransform.rotation = Quaternion.Euler(PlayerPhoneStartRotation.x , PlayerPhoneStartRotation.y , PlayerPhoneStartRotation.z + 5.4f* Mathf.Sin(0.45f * Time.timeSinceLevelLoad));
     
-        LightEnemy.intensity = LightEnemyStartIntersity +  Mathf.Abs( 15 * Mathf.Sin(1.84f * Time.timeSinceLevelLoad) + 7 );
-        LightSelf.intensity = LightSelfStartIntersity +  Mathf.Abs( 45 * Mathf.Sin(1.96f * Time.timeSinceLevelLoad + 2.53f) + 18 );
+
 
         ShopCountDownTick();
     }
