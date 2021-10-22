@@ -73,7 +73,8 @@ public class net : MonoBehaviour
 
         TryMatch();
 
-        miniGameObserver.StartRandomMiniGame();
+        //miniGameObserver.StartRandomMiniGame();
+
 
     }
     void CallMiniGame(){
@@ -104,6 +105,7 @@ public class net : MonoBehaviour
         Send(netMessage);
     }
     void TryBuyItem(params object[] data){
+        if(UIManager.PlayerPhone.ButtonBuy.interactable == false)    return;
         NetMessage netMessage = new NetMessage();
         netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -167,7 +169,7 @@ public class net : MonoBehaviour
         }
           
         if(LevelManagerNetTest.Instance.EnemyPlayerInfo != null)   {
-            UIManager.EnemyPhone.TextNowMoney.text = "$" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
+            UIManager.EnemyPhone.TextNowMoney.text = LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
         }
 
         while(MessageQueue.Count>0){
@@ -195,7 +197,7 @@ public class net : MonoBehaviour
 
             UIManager.SetPlayerInfo(true , dMoney);
 
-            if(playerInfo.Money <= 0){
+            if(playerInfo.Money <= 1000){
                 LevelManagerNetTest.Instance.ResultWin = true;
                 SceneManager.LoadScene("Result");
             }
@@ -209,7 +211,7 @@ public class net : MonoBehaviour
 
             UIManager.SetPlayerInfo(false , dMoney);
 
-            if(playerInfo.Money <= 0){
+            if(playerInfo.Money <= 1000){
                 LevelManagerNetTest.Instance.ResultWin = false;
                 SceneManager.LoadScene("Result");
             }
@@ -275,6 +277,8 @@ public class net : MonoBehaviour
                 if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
                     LevelManagerNetTest.Instance.IsAttacking = true;
                     UIManager.OnAttack(true);
+                    LevelManagerNetTest.Instance.IsEnemyScreenShut = true;
+                    UIManager.EnemyPhoneAnimator.SetBool("Light" , true);
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
                     OnEnemyAttack();
                     //if(!LevelManagerNetTest.Instance.IsMyScreenShut) UIManager.StartBlockCountDown();
@@ -285,7 +289,14 @@ public class net : MonoBehaviour
                     LevelManagerNetTest.Instance.IsMyScreenShut = false;
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
                     LevelManagerNetTest.Instance.IsEnemyScreenShut = false;
+                    UIManager.EnemyPhoneAnimator.SetBool("Light" , false);
+                    LevelManagerNetTest.Instance.IsAttacking = false;
+                    UIManager.OnMatchSuccess();
                 }
+                break;
+            case NetWorkMessageIndex.RetAuction_LoveCmd:
+                Debug.Log("Auction");
+                UIManager.BuyItemSuccess(false);
                 break;
             //case NetWorkMessageIndex.RetShutScreenReceived_LoveCmd :
             //    if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){

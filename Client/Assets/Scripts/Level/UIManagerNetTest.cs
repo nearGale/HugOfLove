@@ -11,7 +11,6 @@ public class PhoneInGame{
     public Text TextItemPrice;
     public Text TextItemDesc;
     public Text TextNowMoney;
-    public Text TextBuyCountDown;
     public Button ButtonBuy;
     public Button ButtonShutScreen;
     public Image ImageShutMask;
@@ -43,29 +42,33 @@ public struct DebugInGame{
 
 public class UIManagerNetTest : MonoBehaviour
 {
+    float LastTickTime = 0;
     public PhoneInGame PlayerPhone = new PhoneInGame();
     public PhoneInGame EnemyPhone = new PhoneInGame();
-    public Image EnemyPic;
-    public Image MyPic;
+    public Animator EnemyPhoneAnimator;
+
+    public Animator AniMe;
+    public Animator AniEne;
+    public Animator AniBoth;
     public Text TextEnemyName;
     public Text TextMyName;
-
+    public Text IsMeAttacking;
     public Animator GlobalMask;
-    public Animator EnemyCharacter;
-    public Animator SelfCharacter;
+    //public Animator EnemyCharacter;
+    //public Animator SelfCharacter;
 
-    public Text PagePlayerName;
-    public Text PagePlayerMoney;
-    public Text PagePlayerMail;
-    public Animator PageAnimator;
+   // public Text PagePlayerName;
+   // public Text PagePlayerMoney;
+   // public Text PagePlayerMail;
 
     Animator EnemyMoneyBeat;
     public Text TextEnemyMoneyBeat;
     public Text TextEnemyMoney;
+    public Text TextCountDown;
+    public Animator AniCountDown;
     Animator MyMoneyBeat;
     public Text TextMyMoneyBeat;
     public Text TextMyMoney;
-    Animator ItemAnimator; 
 
     Vector3 PlayerPhoneStartPos;
     Vector3 PlayerPhoneStartRotation;
@@ -74,41 +77,27 @@ public class UIManagerNetTest : MonoBehaviour
     float BlockCountDownDuration = 1.5f;
     float ShopCountDownTime;
     bool isBlockCountDown;
+
+    public List<RectTransform> BasicBeatList = new List<RectTransform>();
     
-    public void StartBlockCountDown(){
-        Debug.Log("start block");
-        PlayerPhone.ShutAlert.SetBool("IsCounting" , true);
-        isBlockCountDown = true;
-        BlockCountDownStartTime = Time.timeSinceLevelLoad;
-        
-    }
-    public void StopBlockCountDown(){
-        PlayerPhone.ShutAlert.SetBool("IsCounting" , false);
-        isBlockCountDown = false;
-    }
     public void BuyItemSuccess(bool isSuccess){
         if(isSuccess){
-            ItemAnimator.SetTrigger("BuySuccess");
             PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransSuccess.SetTrigger("Trans");
         }else{
-            ItemAnimator.SetTrigger("BuyFail");
             PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
         }
 
         PlayerPhone.TextItemDesc.text = "更多商品，即将到来！";
         PlayerPhone.TextItemPrice.text = "$？？？";
-        PlayerPhone.TextBuyCountDown.text = "00:00";
 
     }
     public void ReSpawnItem(){
-        EnemyPhone.TextItemDesc.text = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Description;
-        EnemyPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
+        //EnemyPhone.TextItemDesc.text = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Description;
+        //EnemyPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
         PlayerPhone.TextItemDesc.text = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Description;
         PlayerPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
-
-        ItemAnimator.SetTrigger("ReSpawn");
         PlayerPhone.ScreenTransAlert.SetTrigger("Trans");
         
         StartShopCountDown();
@@ -117,7 +106,7 @@ public class UIManagerNetTest : MonoBehaviour
 
     public void StartShopCountDown(){
         ShopCountDownTime = 5f;
-        PlayerPhone.CountDown.SetBool("isCounting" , true);
+        AniCountDown.SetBool("isCounting" , true);
     }
 
     public void SetPlayerInfo(bool isSelf , int deltaMoney){
@@ -129,14 +118,20 @@ public class UIManagerNetTest : MonoBehaviour
         }else{
             EnemyMoneyBeat.SetTrigger("Beat");
             TextEnemyMoneyBeat.text = d;
-            PagePlayerMoney.text = "她好像还剩……" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
+            //PagePlayerMoney.text = "她好像还剩……" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
         }
     }
 
     public void OnMatchSuccess(){
-        PageAnimator.SetTrigger("MatchSuccess");
-        PagePlayerMail.text = "她的邮箱是……\n" + LevelManagerNetTest.Instance.EnemyPlayerMail.ToString();
-        PagePlayerName.text = "她好像叫……" + LevelManagerNetTest.Instance.EnemyPlayerName.ToString();
+
+        EnemyPhoneAnimator.SetBool("Light" , true);
+
+       // PagePlayerMail.text = "她的邮箱是……\n" + LevelManagerNetTest.Instance.EnemyPlayerMail.ToString();
+       // PagePlayerName.text = "她好像叫……" + LevelManagerNetTest.Instance.EnemyPlayerName.ToString();
+//
+        AniBoth.SetBool("active" , true);
+        AniMe.SetBool("active" , false);
+        AniEne.SetBool("active" , false);
 //        PagePlayerMoney.text = "她好像还剩……" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
     }
 
@@ -144,14 +139,13 @@ public class UIManagerNetTest : MonoBehaviour
         
         if(ShopCountDownTime >=0){
             ShopCountDownTime -= Time.deltaTime;
-            PlayerPhone.TextBuyCountDown.text = string.Format("00:{0:00}" , Mathf.Ceil(ShopCountDownTime));
+            TextCountDown.text = string.Format("{0:00}" , Mathf.Ceil(ShopCountDownTime));
             if(ShopCountDownTime < 0 ){
                 PlayerPhone.ButtonBuy.interactable = true;
-                PlayerPhone.CountDown.SetBool("isCounting" , false);
-                PlayerPhone.TextBuyCountDown.text = "现在抢购！";
+                AniCountDown.SetBool("isCounting" , false);
+                TextCountDown.text = "Now";
             }
         }  
-        if(LevelManagerNetTest.Instance.NowItemID <= 0) PlayerPhone.TextBuyCountDown.text = "敬请期待";
         
     }
 
@@ -162,15 +156,41 @@ public class UIManagerNetTest : MonoBehaviour
         EnemyMoneyBeat = TextEnemyMoney.GetComponent<Animator>();
         MyMoneyBeat = TextMyMoney.GetComponent<Animator>();
 
-        ItemAnimator = PlayerPhone.ImageItemPic.GetComponent<Animator>();
-
         PlayerPhoneStartPos = PlayerPhone.RootTransform.position;
         PlayerPhoneStartRotation  = PlayerPhone.RootTransform.rotation.eulerAngles;
+
+        LastTickTime = Time.timeSinceLevelLoad;
+    }
+
+    IEnumerator TickTick(int frame){
+        for (float i = 0; i < frame; i++)
+        {
+            float k = 1.1f;
+            float z;
+            if( i < frame /2){
+                z = 1 + (k - 1) * ( i / (frame / 2));
+            }else{
+                z = k - (k - 1) * ( (i - frame / 2) / (frame / 2));
+            }
+            //Debug.Log(z);
+            PlayerPhone.RootTransform.localScale = new Vector3( z ,  z , 1 );
+            EnemyPhone.RootTransform.localScale = new Vector3( z ,  z , 1 );
+            foreach (var item in BasicBeatList)
+            {
+                item.localScale = new Vector3( z ,  z , 1 );
+            }
+            yield return null;//表示下一帧再继续执行后面的代码
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Time.timeSinceLevelLoad - LastTickTime >= 1){
+            LastTickTime = Time.timeSinceLevelLoad;
+            StartCoroutine(TickTick(40));
+        }
+        
         PlayerPhone.ImageBlockCountDown.gameObject.SetActive(isBlockCountDown);
         //if(isBlockCountDown){
         //    var a = .1f;
@@ -180,16 +200,19 @@ public class UIManagerNetTest : MonoBehaviour
         //}
 
         //PlayerPhone.RootTransform.position = new Vector3(PlayerPhoneStartPos.x + PhoneWingleSpeed * Mathf.Sin(0.8f * Time.timeSinceLevelLoad) , PlayerPhoneStartPos.y - PhoneWingleSpeed * Mathf.Sin(0.42f * Time.timeSinceLevelLoad) , 0);
-        PlayerPhone.RootTransform.rotation = Quaternion.Euler(PlayerPhoneStartRotation.x , PlayerPhoneStartRotation.y , PlayerPhoneStartRotation.z + 5.4f* Mathf.Sin(0.45f * Time.timeSinceLevelLoad));
+        PlayerPhone.RootTransform.rotation = Quaternion.Euler(PlayerPhoneStartRotation.x , PlayerPhoneStartRotation.y , PlayerPhoneStartRotation.z + 5.4f* Mathf.Sin(0.9f * Time.timeSinceLevelLoad + 1.2F));
+    
+        EnemyPhone.RootTransform.rotation = Quaternion.Euler(PlayerPhoneStartRotation.x , PlayerPhoneStartRotation.y , PlayerPhoneStartRotation.z + 5.4f* Mathf.Sin(0.72f * Time.timeSinceLevelLoad));
     
 
+        IsMeAttacking.gameObject.SetActive( LevelManagerNetTest.Instance.IsAttacking );
 
         ShopCountDownTick();
     }
 
     public void ShowKiss(){
         GlobalMask.SetTrigger("Kiss");
-        EnemyCharacter.SetTrigger("AttackSuccess");
+        //EnemyCharacter.SetTrigger("AttackSuccess");
     }
 
     public void ShowBlock(){
@@ -206,18 +229,17 @@ public class UIManagerNetTest : MonoBehaviour
 
     public void OnAttack(bool isSelf){
         if(isSelf){
-            SelfCharacter.SetTrigger("BeAttacked");
-        }else{
-            EnemyCharacter.SetBool("IsAttacking" , true);
-        }
-    }
-    public void OnCancelAttack(bool isSelf){
-        if(isSelf){
-            SelfCharacter.SetTrigger("AttackEnd");
-            
-        }else{
-            EnemyCharacter.SetBool("IsAttacking" , false);
-        }
-    }
+            //SelfCharacter.SetTrigger("BeAttacked");
 
+            AniBoth.SetBool("active" , false);
+            AniMe.SetBool("active" , true);
+            AniEne.SetBool("active" , false);
+        }else{
+            //EnemyCharacter.SetBool("IsAttacking" , true);
+
+            AniBoth.SetBool("active" , false);
+            AniMe.SetBool("active" , false);
+            AniEne.SetBool("active" , true);
+        }
+    }
 }

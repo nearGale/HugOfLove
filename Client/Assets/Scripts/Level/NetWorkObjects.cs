@@ -24,7 +24,9 @@ namespace ProjectNetWork{
 	RetCancelAttackReceived_LoveCmd	=17,
 	ReqHeartBag_LoveCmd				=18,
 	RetSetPlayerInfo_LoveCmd		=19,
-	RetBlockSuccess_LoveCmd			=20
+	RetBlockSuccess_LoveCmd			=20,
+    RetAuction_LoveCmd				=22
+
 
 
 

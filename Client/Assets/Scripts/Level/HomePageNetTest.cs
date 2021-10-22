@@ -13,7 +13,7 @@ public class HomePageNetTest : MonoBehaviour
     public Queue MessageQueue = new Queue();
 
     void TryMatch(){
-        SceneManager.LoadScene("NetTestScene");
+        SceneManager.LoadScene("Scene2In1");
     }
 
     static void TryLogin(){
