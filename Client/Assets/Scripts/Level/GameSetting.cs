@@ -9,24 +9,18 @@ public class ShopItem{
     public string Description;
     public Sprite Icon;
 
-    public ShopItem(int id = 0 , int price = 0 , string Description = "test" , Sprite Icon = null){
-
+    public ShopItem(int id = 0 , int price = 0 , string description = "test" , Sprite icon = null){
+        ID = id;
+        Price = price;
+        Description = description;
+        Icon = icon;
     }
 }
 
 
 public class GameSetting : Single<GameSetting>
 {
-    ShopItem[] shopItems = {
-        new ShopItem(1 , 100 , "描述1描述1描述1描述1描述1描述1描述1描述1" , null),
-        new ShopItem(2 , 100 , "描述2描述2描述2描述2描述2描述2描述2描述2" , null),
-        new ShopItem(3 , 100 , "描述3描述3描述3描述3描述3描述3描述3描述3" , null),
-        new ShopItem(4 , 100 , "描述4描述4描述4描述4描述4描述4描述4描述4" , null),
-        new ShopItem(5 , 100 , "描述5描述5描述5描述5描述5描述5描述5描述5" , null),
-        new ShopItem(6 , 100 , "描述6描述6描述6描述6描述6描述6描述6描述6" , null),
-        new ShopItem(7 , 100 , "描述7描述7描述7描述7描述7描述7描述7描述7" , null),
-
-    };
+    public List<ShopItem> shopItems;
     public ShopItem GetShopItemByID(int ID){
         foreach (var item in shopItems)
         {

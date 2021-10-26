@@ -11,6 +11,7 @@ public class PhoneInGame{
     public Text TextItemPrice;
     public Text TextItemDesc;
     public Text TextNowMoney;
+    public Text TextLookBackTime;
     public Button ButtonBuy;
     public Button ButtonShutScreen;
     public Image ImageShutMask;
@@ -42,6 +43,12 @@ public struct DebugInGame{
 
 public class UIManagerNetTest : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip AudioCheer;
+    public AudioClip AudioFail;
+    public AudioClip AudioSpawn;
+    public AudioClip AudioAuction;
+    public AudioClip AudioError;
     float LastTickTime = 0;
     public PhoneInGame PlayerPhone = new PhoneInGame();
     public PhoneInGame EnemyPhone = new PhoneInGame();
@@ -50,6 +57,7 @@ public class UIManagerNetTest : MonoBehaviour
     public Animator AniMe;
     public Animator AniEne;
     public Animator AniBoth;
+
     public Text TextEnemyName;
     public Text TextMyName;
     public Text IsMeAttacking;
@@ -80,13 +88,19 @@ public class UIManagerNetTest : MonoBehaviour
 
     public List<RectTransform> BasicBeatList = new List<RectTransform>();
     
-    public void BuyItemSuccess(bool isSuccess){
+    public void BuyItemSuccess(bool isSuccess , bool isAuction = false){
         if(isSuccess){
             PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransSuccess.SetTrigger("Trans");
+            audioSource.PlayOneShot(AudioCheer);
         }else{
             PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
+            if(!isAuction) {
+                audioSource.PlayOneShot(AudioFail);
+            }else{
+                audioSource.PlayOneShot(AudioAuction);
+            }
         }
 
         PlayerPhone.TextItemDesc.text = "更多商品，即将到来！";
@@ -98,10 +112,14 @@ public class UIManagerNetTest : MonoBehaviour
         //EnemyPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
         PlayerPhone.TextItemDesc.text = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Description;
         PlayerPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
+        PlayerPhone.ImageItemPic.sprite = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Icon;
         PlayerPhone.ScreenTransAlert.SetTrigger("Trans");
-        
+        audioSource.PlayOneShot(AudioSpawn);
         StartShopCountDown();
         
+    }
+    public void OnPlayError(params object[] data){
+        audioSource.PlayOneShot(AudioError);
     }
 
     public void StartShopCountDown(){
@@ -110,6 +128,7 @@ public class UIManagerNetTest : MonoBehaviour
     }
 
     public void SetPlayerInfo(bool isSelf , int deltaMoney){
+        if(deltaMoney ==0)  return;
         string d = deltaMoney >= 0 ?"+":"-" + deltaMoney.ToString();
         if(isSelf){
             MyMoneyBeat.SetTrigger("Beat");
@@ -160,6 +179,10 @@ public class UIManagerNetTest : MonoBehaviour
         PlayerPhoneStartRotation  = PlayerPhone.RootTransform.rotation.eulerAngles;
 
         LastTickTime = Time.timeSinceLevelLoad;
+
+        audioSource.PlayOneShot(AudioCheer);
+
+        EventCenter.Instance.EventAddListener(EventCenterType.PlayerErrorAudio , OnPlayError);
     }
 
     IEnumerator TickTick(int frame){
@@ -186,7 +209,7 @@ public class UIManagerNetTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.timeSinceLevelLoad - LastTickTime >= 1){
+        if(Time.timeSinceLevelLoad - LastTickTime >= .5){
             LastTickTime = Time.timeSinceLevelLoad;
             StartCoroutine(TickTick(40));
         }

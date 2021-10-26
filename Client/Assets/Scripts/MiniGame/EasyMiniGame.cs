@@ -57,6 +57,16 @@ public class EasyMiniGame : BasicMiniGame
         return KeyCode.None;
     }
 
+    IEnumerator shake(int frame){
+        for (float i = 0; i < frame; i++)
+        {
+            if(i%5 == 0){
+                transform.position += new Vector3(Random.Range(-10 , 10) , Random.Range(-10 , 10) , 0);
+            }
+            yield return null;//表示下一帧再继续执行后面的代码
+        }
+    }
+
 
     public override void Update()
     {
@@ -67,6 +77,7 @@ public class EasyMiniGame : BasicMiniGame
             KeyCode currentKey = keyCode;
             InputList.Add((int)(currentKey));
             if(CharList[ InputList.Count - 1 ] == InputList[ InputList.Count - 1 ]-32   ){
+                StartCoroutine(shake(20));
                 if(CharList.Count == InputList.Count)   {
                     TextAni.SetTrigger("beat");
                     Invoke("Success" , 0.8f);
@@ -75,6 +86,7 @@ public class EasyMiniGame : BasicMiniGame
             }else{
                 InputList = new List<int>();
                 TextAni.SetTrigger("beat2");
+                EventCenter.Instance.EventTrigger(EventCenterType.PlayerErrorAudio );
             }
         }
     

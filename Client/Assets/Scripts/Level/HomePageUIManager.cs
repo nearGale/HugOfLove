@@ -7,6 +7,8 @@ public class HomePageUIManager : MonoBehaviour
 
     public Button LoginButton;
     public  Button MatchButton;
+    public Button ScoreButton;
+    public Text ScoreList;
     public InputField NameInputField;
     public InputField MailInputField;
     public Text NowStats;

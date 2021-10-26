@@ -14,7 +14,8 @@ public enum EventCenterType{
     NetLog,
     QuitMiniGame,
     SuccessMiniGame,
-    BlockSuccess
+    BlockSuccess,
+    PlayerErrorAudio
 
 }
 

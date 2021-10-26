@@ -25,7 +25,11 @@ namespace ProjectNetWork{
 	ReqHeartBag_LoveCmd				=18,
 	RetSetPlayerInfo_LoveCmd		=19,
 	RetBlockSuccess_LoveCmd			=20,
-    RetAuction_LoveCmd				=22
+    RetAuction_LoveCmd				=22,
+    RetPlayerScoreLiST_loveCmd		=23,
+	ReqPlayerScoreList_LoveCmd		=24,
+	ReqPlayerLogout_LoveCmd			=25
+
 
 
 
@@ -36,10 +40,18 @@ namespace ProjectNetWork{
         LoveCmd = 5
     }
     [System.Serializable]
+    public class SqlUser{
+	    public string name;
+        public string email;
+        public int score;
+    }
+
+
+    [System.Serializable]
     public class PlayerInfo{
         public string PlayerMail = "xxx@garena.cn";
         public int Money = 0;
-        public int LookBackTime = 0;//在原来基础上×100000
+        public int LookBackTime = 0;
     }
     [System.Serializable]
     public class NetMessageVar<T>{
@@ -64,6 +76,7 @@ namespace ProjectNetWork{
         public PlayerInfo PlayerOne;
         public PlayerInfo PlayerTwo;
         public string templetStr = "{{\"MessageType\":{0},\"MessageIndex\":{1}{2}}}";
+        public SqlUser[] PlayerScoreList;
     }
 
     public static class NetWorkUtility{
@@ -73,6 +86,7 @@ namespace ProjectNetWork{
 
         public static string toStrObject(NetMessage netMessage){
             string str = ",";
+            
             switch (netMessage.MessageIndex)
             {
                 case NetWorkMessageIndex.ReqPlayerLogin_LoveCmd:
@@ -99,6 +113,9 @@ namespace ProjectNetWork{
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 case NetWorkMessageIndex.ReqHeartBag_LoveCmd:
+                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
+                    break;
+                case NetWorkMessageIndex.ReqPlayerScoreList_LoveCmd:
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 default:

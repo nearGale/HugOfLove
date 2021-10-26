@@ -47,8 +47,6 @@ public class HomePageNetTest : MonoBehaviour
             Thread c_thread = new Thread(Received);
             c_thread.IsBackground = true;
             c_thread.Start();
-
-            TryLogin();
         }
         catch (System.Exception e)
         {
@@ -121,10 +119,26 @@ public class HomePageNetTest : MonoBehaviour
         homePageUIManager = GetComponent<HomePageUIManager>();
 
         EventCenter.Instance.EventAddListener(EventCenterType.OnMessageReceive,EnqueueMessage);
+        
+        homePageUIManager.ScoreButton.onClick.AddListener(TryGetScore);
 
-        homePageUIManager.MatchButton.onClick.AddListener(TryMatch);
-        homePageUIManager.LoginButton.onClick.AddListener(TryConnectServer);
+        //homePageUIManager.MatchButton.onClick.AddListener(TryMatch);
+        homePageUIManager.LoginButton.onClick.AddListener(TryLogin);
 
+        TryConnectServer();
+
+        if(LevelManagerNetTest.Instance.MyPlayerInfo!=null){
+            homePageUIManager.MailInputField.text =  LevelManagerNetTest.Instance.MyPlayerMail.ToString();
+            homePageUIManager.NameInputField.text =  LevelManagerNetTest.Instance.MyPlayerName.ToString();
+        }
+
+    }
+
+    void TryGetScore(){
+        NetMessage netMessage = new NetMessage();
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerScoreList_LoveCmd;
+        Send(netMessage);
     }
 
     // Update is called once per frame
@@ -153,6 +167,18 @@ public class HomePageNetTest : MonoBehaviour
             case NetWorkMessageIndex.RetPlayerLogin_LoveCmd:
                 LevelManagerNetTest.Instance.nowState = LevelMatchState.LoginSuccess;
                 homePageUIManager.NowStats.text = string.Format("LoginSuccess!\n{0}\n{1}" , LevelManagerNetTest.Instance.MyPlayerName , LevelManagerNetTest.Instance.MyPlayerMail);
+                TryMatch();
+                break;
+            case NetWorkMessageIndex.RetPlayerScoreLiST_loveCmd:
+                string t = "";
+                int i = 0;
+                foreach (SqlUser item in netMessage.PlayerScoreList)
+                {
+                    i++;
+                    t += string.Format("#{0} {1} {2}" , i.ToString() , item.name , item.score.ToString());
+                }
+
+                homePageUIManager.ScoreList.text = t;
                 break;
             default:break;
         }

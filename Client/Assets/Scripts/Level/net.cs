@@ -7,7 +7,7 @@ using System.Text;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using ProjectNetWork;
-
+using System.Collections.Generic;
 public enum LevelMatchState{
     Idle,
     LoginSuccess,
@@ -36,6 +36,9 @@ public class LevelManagerNetTest : Single<LevelManagerNetTest>
     public bool ResultWin;
 
     public float AliveSendTime;
+
+    public int EnemyAttackTime = 2;
+    public int MyAttackTime = 2;
 }
 
 public class net : MonoBehaviour
@@ -73,6 +76,20 @@ public class net : MonoBehaviour
 
         TryMatch();
 
+        GameSetting.Instance.shopItems = new List<ShopItem>{
+         new ShopItem(1 , 800 , "描述1描述1描述1描述1描述1描述1描述1描述1" , Resources.Load<Sprite>("2_M4A1")),
+         new ShopItem(2 , 1200 , "描述2描述2描述2描述2描述2描述2描述2描述2" , Resources.Load<Sprite>("3_USP")),
+         new ShopItem(3 , 2300 , "描述3描述3描述3描述3描述3描述3描述3描述3" , Resources.Load<Sprite>("4_AWM")),
+         new ShopItem(4 , 3200 , "描述4描述4描述4描述4描述4描述4描述4描述4" , Resources.Load<Sprite>("5_M1014")),
+         new ShopItem(5 , 3700 , "描述5描述5描述5描述5描述5描述5描述5描述5" , Resources.Load<Sprite>("6_AK")),
+         new ShopItem(6 , 4200 , "描述6描述6描述6描述6描述6描述6描述6描述6" , Resources.Load<Sprite>("7_UMPSG")),
+         new ShopItem(7 , 4700 , "描述7描述7描述7描述7描述7描述7描述7描述7" , Resources.Load<Sprite>("8_MP5")),
+        };
+        Debug.Log(GameSetting.Instance.shopItems[5].Description);
+
+        LevelManagerNetTest.Instance.MyAttackTime = 2;
+        LevelManagerNetTest.Instance.EnemyAttackTime = 2;
+
         //miniGameObserver.StartRandomMiniGame();
 
 
@@ -98,6 +115,9 @@ public class net : MonoBehaviour
 
     void TryAttack(){
         if(LevelManagerNetTest.Instance.IsAttacking)    return;
+        if(LevelManagerNetTest.Instance.MyAttackTime <= 0){
+            return;
+        }
         NetMessage netMessage = new NetMessage();
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
         netMessage.MessageIndex = NetWorkMessageIndex.ReqAttack_LoveCmd;
@@ -166,10 +186,12 @@ public class net : MonoBehaviour
 
         if(LevelManagerNetTest.Instance.MyPlayerInfo != null)   {
             UIManager.PlayerPhone.TextNowMoney.text = "$" + LevelManagerNetTest.Instance.MyPlayerInfo.Money.ToString();
+            UIManager.PlayerPhone.TextLookBackTime.text = LevelManagerNetTest.Instance.MyAttackTime.ToString();
         }
           
         if(LevelManagerNetTest.Instance.EnemyPlayerInfo != null)   {
             UIManager.EnemyPhone.TextNowMoney.text = LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
+            UIManager.EnemyPhone.TextLookBackTime.text = LevelManagerNetTest.Instance.EnemyAttackTime.ToString();
         }
 
         while(MessageQueue.Count>0){
@@ -244,15 +266,20 @@ public class net : MonoBehaviour
                 Debug.Log("SpawnItem:" + LevelManagerNetTest.Instance.NowItemID.ToString());
                 break;
             case NetWorkMessageIndex.RetMessageBuyItemSuccess_LoveCmd:
-                LevelManagerNetTest.Instance.NowItemID = 0;
                 if(netMessage.IsSuccess){
+                    LevelManagerNetTest.Instance.NowItemID = 0;
                     Debug.Log("I success");
                     UIManager.BuyItemSuccess(true);
+
+                    LevelManagerNetTest.Instance.EnemyAttackTime++;
                     break;
                 }
                 if(netMessage.IsEnemySuccess){
+                    LevelManagerNetTest.Instance.NowItemID = 0;
                     Debug.Log("Enemy Success");
                     UIManager.BuyItemSuccess(false);
+
+                    LevelManagerNetTest.Instance.MyAttackTime++;
                     break;
                 }
                 break;
@@ -278,25 +305,37 @@ public class net : MonoBehaviour
                     LevelManagerNetTest.Instance.IsAttacking = true;
                     UIManager.OnAttack(true);
                     LevelManagerNetTest.Instance.IsEnemyScreenShut = true;
-                    UIManager.EnemyPhoneAnimator.SetBool("Light" , true);
+                    UIManager.EnemyPhoneAnimator.SetBool("Light" , false);
+
+                    LevelManagerNetTest.Instance.MyAttackTime--;
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
                     OnEnemyAttack();
+                    LevelManagerNetTest.Instance.EnemyAttackTime--;
                     //if(!LevelManagerNetTest.Instance.IsMyScreenShut) UIManager.StartBlockCountDown();
                 }
                 break;
             case NetWorkMessageIndex.RetLightScreenReceived_LoveCmd:
                 if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
                     LevelManagerNetTest.Instance.IsMyScreenShut = false;
+
+                    UIManager.AniBoth.SetBool("active" , true);
+                    UIManager.AniMe.SetBool("active" , false);
+                    UIManager.AniEne.SetBool("active" , false);
+
+                    LevelManagerNetTest.Instance.IsEnemyAttacking = false;
+
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
                     LevelManagerNetTest.Instance.IsEnemyScreenShut = false;
-                    UIManager.EnemyPhoneAnimator.SetBool("Light" , false);
+                    UIManager.EnemyPhoneAnimator.SetBool("Light" , true);
                     LevelManagerNetTest.Instance.IsAttacking = false;
+
                     UIManager.OnMatchSuccess();
                 }
                 break;
             case NetWorkMessageIndex.RetAuction_LoveCmd:
+                if(LevelManagerNetTest.Instance.NowItemID == 0) break;
                 Debug.Log("Auction");
-                UIManager.BuyItemSuccess(false);
+                UIManager.BuyItemSuccess(false , true);
                 break;
             //case NetWorkMessageIndex.RetShutScreenReceived_LoveCmd :
             //    if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
