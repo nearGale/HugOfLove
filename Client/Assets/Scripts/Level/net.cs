@@ -220,8 +220,7 @@ public class net : MonoBehaviour
             UIManager.SetPlayerInfo(true , dMoney);
 
             if(playerInfo.Money <= 1000){
-                LevelManagerNetTest.Instance.ResultWin = true;
-                SceneManager.LoadScene("Result");
+                Invoke("GotoResult" , 2f);
             }
         }else if(playerInfo.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
             if(LevelManagerNetTest.Instance.EnemyPlayerInfo!= null)    {
@@ -240,6 +239,10 @@ public class net : MonoBehaviour
         }
 
         
+    }
+
+    public void GotoResult(){
+        LevelManagerNetTest.Instance.ResultWin = true;
     }
 
     public void OnEnemyAttack(){
