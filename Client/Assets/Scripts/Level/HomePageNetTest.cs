@@ -61,7 +61,7 @@ public class HomePageNetTest : MonoBehaviour
         {
             try
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[2048];
                 int len = LevelManagerNetTest.Instance.global_socket_client.Receive(buffer);
                 if (len == 0) break;
                 string str = Encoding.UTF8.GetString(buffer, 0, len);
@@ -82,7 +82,7 @@ public class HomePageNetTest : MonoBehaviour
     {
        // try
        // {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[2048];
             Debug.Log("Send" + NetWorkUtility.toNetStr(msgobj));
             buffer = Encoding.UTF8.GetBytes(NetWorkUtility.toNetStr(msgobj));
             LevelManagerNetTest.Instance.global_socket_client.Send(buffer);
@@ -119,8 +119,6 @@ public class HomePageNetTest : MonoBehaviour
         homePageUIManager = GetComponent<HomePageUIManager>();
 
         EventCenter.Instance.EventAddListener(EventCenterType.OnMessageReceive,EnqueueMessage);
-        
-        homePageUIManager.ScoreButton.onClick.AddListener(TryGetScore);
 
         //homePageUIManager.MatchButton.onClick.AddListener(TryMatch);
         homePageUIManager.LoginButton.onClick.AddListener(TryLogin);
@@ -175,7 +173,7 @@ public class HomePageNetTest : MonoBehaviour
                 foreach (SqlUser item in netMessage.PlayerScoreList)
                 {
                     i++;
-                    t += string.Format("#{0} {1} {2}" , i.ToString() , item.name , item.score.ToString());
+                    t += string.Format("#{0} {1} {2}\n" , i.ToString() , item.Name , item.Score.ToString());
                 }
 
                 homePageUIManager.ScoreList.text = t;

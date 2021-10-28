@@ -126,6 +126,7 @@ public class net : MonoBehaviour
     }
     void TryBuyItem(params object[] data){
         if(UIManager.PlayerPhone.ButtonBuy.interactable == false)    return;
+        if(LevelManagerNetTest.Instance.IsEnemyAttacking == true)   return;
         NetMessage netMessage = new NetMessage();
         netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -220,6 +221,7 @@ public class net : MonoBehaviour
             UIManager.SetPlayerInfo(true , dMoney);
 
             if(playerInfo.Money <= 1000){
+                LevelManagerNetTest.Instance.ResultWin = true;
                 Invoke("GotoResult" , 2f);
             }
         }else if(playerInfo.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
@@ -234,7 +236,7 @@ public class net : MonoBehaviour
 
             if(playerInfo.Money <= 1000){
                 LevelManagerNetTest.Instance.ResultWin = false;
-                SceneManager.LoadScene("Result");
+                Invoke("GotoResult" , 2f);
             }
         }
 
@@ -242,7 +244,7 @@ public class net : MonoBehaviour
     }
 
     public void GotoResult(){
-        LevelManagerNetTest.Instance.ResultWin = true;
+        SceneManager.LoadScene("Result");
     }
 
     public void OnEnemyAttack(){
@@ -267,6 +269,7 @@ public class net : MonoBehaviour
                 LevelManagerNetTest.Instance.NowItemID = ((int)netMessage.ItemID);
                 UIManager.ReSpawnItem();
                 Debug.Log("SpawnItem:" + LevelManagerNetTest.Instance.NowItemID.ToString());
+                UIManager.PlayerPhone.ImageItemPic.color = new Color(1,1,1,1);
                 break;
             case NetWorkMessageIndex.RetMessageBuyItemSuccess_LoveCmd:
                 if(netMessage.IsSuccess){
@@ -275,6 +278,8 @@ public class net : MonoBehaviour
                     UIManager.BuyItemSuccess(true);
 
                     LevelManagerNetTest.Instance.EnemyAttackTime++;
+
+                    UIManager.PlayerPhone.ImageItemPic.color = new Color(1,1,1,0);
                     break;
                 }
                 if(netMessage.IsEnemySuccess){
@@ -283,6 +288,7 @@ public class net : MonoBehaviour
                     UIManager.BuyItemSuccess(false);
 
                     LevelManagerNetTest.Instance.MyAttackTime++;
+                    UIManager.PlayerPhone.ImageItemPic.color = new Color(1,1,1,0);
                     break;
                 }
                 break;

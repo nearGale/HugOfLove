@@ -41,9 +41,11 @@ namespace ProjectNetWork{
     }
     [System.Serializable]
     public class SqlUser{
-	    public string name;
-        public string email;
-        public int score;
+        public string Name;
+        public string Email;
+        public int Score;
+        public int WinCount;
+        public int AverageScore;
     }
 
 
@@ -76,7 +78,7 @@ namespace ProjectNetWork{
         public PlayerInfo PlayerOne;
         public PlayerInfo PlayerTwo;
         public string templetStr = "{{\"MessageType\":{0},\"MessageIndex\":{1}{2}}}";
-        public SqlUser[] PlayerScoreList;
+        public List<SqlUser> PlayerScoreList;
     }
 
     public static class NetWorkUtility{
@@ -116,7 +118,8 @@ namespace ProjectNetWork{
                     str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
                     break;
                 case NetWorkMessageIndex.ReqPlayerScoreList_LoveCmd:
-                    str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
+                    //str += "\"PlayerMail\":\""+netMessage.PlayerMail.ToString()+"\"";
+                    str = "";
                     break;
                 default:
                     str = "";

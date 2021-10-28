@@ -43,6 +43,8 @@ public struct DebugInGame{
 
 public class UIManagerNetTest : MonoBehaviour
 {
+    public List<GameObject> OnMatchHuds;
+    
     public AudioSource audioSource;
     public AudioClip AudioCheer;
     public AudioClip AudioFail;
@@ -229,6 +231,11 @@ public class UIManagerNetTest : MonoBehaviour
     
 
         IsMeAttacking.gameObject.SetActive( LevelManagerNetTest.Instance.IsAttacking );
+
+        foreach (var item in OnMatchHuds)
+        {
+            
+        }
 
         ShopCountDownTick();
     }
