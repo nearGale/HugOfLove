@@ -21,6 +21,10 @@ public class PhoneInGame{
     public Animator ScreenTransAlert;
     public Animator ShutAlert;
     public Animator CountDown;
+
+    public Animator InfoMe;
+    public Text Info;
+    public GameObject InfoRoot;
 }
 
 [System.Serializable]
@@ -153,6 +157,10 @@ public class UIManagerNetTest : MonoBehaviour
         AniBoth.SetBool("active" , true);
         AniMe.SetBool("active" , false);
         AniEne.SetBool("active" , false);
+
+    
+
+
 //        PagePlayerMoney.text = "她好像还剩……" + LevelManagerNetTest.Instance.EnemyPlayerInfo.Money.ToString();
     }
 
@@ -190,7 +198,7 @@ public class UIManagerNetTest : MonoBehaviour
     IEnumerator TickTick(int frame){
         for (float i = 0; i < frame; i++)
         {
-            float k = 1.1f;
+            float k = 1.07f;
             float z;
             if( i < frame /2){
                 z = 1 + (k - 1) * ( i / (frame / 2));
@@ -234,7 +242,7 @@ public class UIManagerNetTest : MonoBehaviour
 
         foreach (var item in OnMatchHuds)
         {
-            
+            item.SetActive(LevelManagerNetTest.Instance.nowState == LevelMatchState.Matching);
         }
 
         ShopCountDownTick();

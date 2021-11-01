@@ -21,8 +21,10 @@ public class LevelManagerNetTest : Single<LevelManagerNetTest>
     public LevelMatchState nowState = LevelMatchState.Idle;
     public string MyPlayerMail = "123@garena.cn";
     public string MyPlayerName = "123";
+    public int MyPlayerRank;
     public string EnemyPlayerMail;
     public string EnemyPlayerName;
+    public int EnemyPlayerRank;
     public int NowItemID;
     public bool IsMyScreenShut = false;
     public bool IsEnemyScreenShut;
@@ -114,7 +116,9 @@ public class net : MonoBehaviour
     }
 
     void TryAttack(){
+        if(!(LevelManagerNetTest.Instance.nowState == LevelMatchState.Gaming))  return;
         if(LevelManagerNetTest.Instance.IsAttacking)    return;
+        if(LevelManagerNetTest.Instance.IsEnemyAttacking)   return;
         if(LevelManagerNetTest.Instance.MyAttackTime <= 0){
             return;
         }
@@ -125,6 +129,7 @@ public class net : MonoBehaviour
         Send(netMessage);
     }
     void TryBuyItem(params object[] data){
+        if(!(LevelManagerNetTest.Instance.nowState == LevelMatchState.Gaming))  return;
         if(UIManager.PlayerPhone.ButtonBuy.interactable == false)    return;
         if(LevelManagerNetTest.Instance.IsEnemyAttacking == true)   return;
         NetMessage netMessage = new NetMessage();
@@ -254,6 +259,17 @@ public class net : MonoBehaviour
         miniGameObserver.StartRandomMiniGame();
     }
 
+
+
+    public void ShowPlayerInfo(){
+        UIManager.PlayerPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.MyPlayerName , LevelManagerNetTest.Instance.MyPlayerRank);
+        UIManager.EnemyPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.EnemyPlayerName , LevelManagerNetTest.Instance.EnemyPlayerRank);
+
+
+        UIManager.PlayerPhone.InfoRoot.SetActive(true);
+        UIManager.EnemyPhone.InfoRoot.SetActive(true);
+    }
+
     public void OnMessageReceive(NetMessage netMessage){
         //NetMessage netMessage = (NetMessage)data[0];
         switch (netMessage.MessageIndex)
@@ -262,7 +278,17 @@ public class net : MonoBehaviour
                 LevelManagerNetTest.Instance.nowState = LevelMatchState.Gaming;
                 LevelManagerNetTest.Instance.EnemyPlayerMail = netMessage.EnemyMail;
                 LevelManagerNetTest.Instance.EnemyPlayerName = netMessage.EnemyName;
+
+                LevelManagerNetTest.Instance.EnemyPlayerRank = netMessage.EnemyRank;
+                LevelManagerNetTest.Instance.MyPlayerRank = netMessage.PlayerRank;
+
                 UIManager.OnMatchSuccess();
+
+
+                UIManager.PlayerPhone.InfoMe.SetTrigger("BLINK");
+
+                Invoke("ShowPlayerInfo"  , 2f);
+
                 //UIManager.TextEnemyName.text = LevelManagerNetTest.Instance.EnemyPlayerName;
                 break;
             case NetWorkMessageIndex.RetMessageSpawnItem_LoveCmd:
@@ -345,6 +371,9 @@ public class net : MonoBehaviour
                 if(LevelManagerNetTest.Instance.NowItemID == 0) break;
                 Debug.Log("Auction");
                 UIManager.BuyItemSuccess(false , true);
+
+                LevelManagerNetTest.Instance.MyAttackTime++;
+                LevelManagerNetTest.Instance.EnemyAttackTime++;
                 break;
             //case NetWorkMessageIndex.RetShutScreenReceived_LoveCmd :
             //    if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){

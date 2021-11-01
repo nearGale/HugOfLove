@@ -69,8 +69,10 @@ namespace ProjectNetWork{
         public NetWorkMessageIndex MessageIndex;
         public string PlayerName;
         public string PlayerMail;
+        public int PlayerRank;
         public string EnemyName;
         public string EnemyMail;
+        public int EnemyRank;
         public bool IsSuccess;
         public bool IsEnemySuccess;
         public string isWin;
