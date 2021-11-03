@@ -89,7 +89,7 @@ public class UIManagerNetTest : MonoBehaviour
     float PhoneWingleSpeed = 0.8f;
     float BlockCountDownStartTime;
     float BlockCountDownDuration = 1.5f;
-    float ShopCountDownTime;
+    public float ShopCountDownTime;
     bool isBlockCountDown;
 
     public List<RectTransform> BasicBeatList = new List<RectTransform>();
@@ -170,7 +170,7 @@ public class UIManagerNetTest : MonoBehaviour
             ShopCountDownTime -= Time.deltaTime;
             TextCountDown.text = string.Format("{0:00}" , Mathf.Ceil(ShopCountDownTime));
             if(ShopCountDownTime < 0 ){
-                PlayerPhone.ButtonBuy.interactable = true;
+                //PlayerPhone.ButtonBuy.interactable = true;
                 AniCountDown.SetBool("isCounting" , false);
                 TextCountDown.text = "Now";
             }

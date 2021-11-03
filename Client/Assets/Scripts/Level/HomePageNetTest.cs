@@ -16,13 +16,16 @@ public class HomePageNetTest : MonoBehaviour
         SceneManager.LoadScene("Scene2In1");
     }
 
-    static void TryLogin(){
-        NetMessage netMessage = new NetMessage();  
-
-        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
-        netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
-        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogin_LoveCmd;
-        Send(netMessage);
+    void TryLogin(){
+        if(!LevelManagerNetTest.Instance.HaveLogin){
+            NetMessage netMessage = new NetMessage();  
+            netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+            netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
+            netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogin_LoveCmd;
+            Send(netMessage);
+        }else{
+            TryMatch();
+        }   
     }
 
     void TryConnectServer(){
@@ -165,6 +168,7 @@ public class HomePageNetTest : MonoBehaviour
             case NetWorkMessageIndex.RetPlayerLogin_LoveCmd:
                 LevelManagerNetTest.Instance.nowState = LevelMatchState.LoginSuccess;
                 homePageUIManager.NowStats.text = string.Format("LoginSuccess!\n{0}\n{1}" , LevelManagerNetTest.Instance.MyPlayerName , LevelManagerNetTest.Instance.MyPlayerMail);
+                LevelManagerNetTest.Instance.HaveLogin = true;
                 TryMatch();
                 break;
             case NetWorkMessageIndex.RetPlayerScoreLiST_loveCmd:

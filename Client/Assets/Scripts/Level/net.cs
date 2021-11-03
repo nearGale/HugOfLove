@@ -39,8 +39,9 @@ public class LevelManagerNetTest : Single<LevelManagerNetTest>
 
     public float AliveSendTime;
 
-    public int EnemyAttackTime = 2;
-    public int MyAttackTime = 2;
+    public int EnemyAttackTime = 1;
+    public int MyAttackTime = 1;
+    public bool HaveLogin = false;
 }
 
 public class net : MonoBehaviour
@@ -69,7 +70,7 @@ public class net : MonoBehaviour
         EventCenter.Instance.EventAddListener(EventCenterType.OnMessageReceive,EnqueueMessage);
 
         //UIManager.PlayerPhone.ButtonBuy.onClick.AddListener(miniGameObserver.StartRandomMiniGame);
-        UIManager.PlayerPhone.ButtonShutScreen.onClick.AddListener(TryShut);
+        //UIManager.PlayerPhone.ButtonShutScreen.onClick.AddListener(TryShut);
 
         //UIManager.PlayerAttackButton.ButtonAttack.onClick.AddListener(TryAttack);
 
@@ -89,8 +90,8 @@ public class net : MonoBehaviour
         };
         Debug.Log(GameSetting.Instance.shopItems[5].Description);
 
-        LevelManagerNetTest.Instance.MyAttackTime = 2;
-        LevelManagerNetTest.Instance.EnemyAttackTime = 2;
+        LevelManagerNetTest.Instance.MyAttackTime = 1;
+        LevelManagerNetTest.Instance.EnemyAttackTime = 1;
 
         //miniGameObserver.StartRandomMiniGame();
 
@@ -130,8 +131,9 @@ public class net : MonoBehaviour
     }
     void TryBuyItem(params object[] data){
         if(!(LevelManagerNetTest.Instance.nowState == LevelMatchState.Gaming))  return;
-        if(UIManager.PlayerPhone.ButtonBuy.interactable == false)    return;
+        if(UIManager.ShopCountDownTime >= 0 )    return;
         if(LevelManagerNetTest.Instance.IsEnemyAttacking == true)   return;
+        if(LevelManagerNetTest.Instance.NowItemID <= 0) return;
         NetMessage netMessage = new NetMessage();
         netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -204,6 +206,9 @@ public class net : MonoBehaviour
             OnMessageReceive((NetMessage)MessageQueue.Dequeue());
         }
 
+    }
+
+    private void LateUpdate() {
         if(Input.GetKeyUp(KeyCode.Return)){
             TryAttack();
         }
@@ -369,11 +374,12 @@ public class net : MonoBehaviour
                 break;
             case NetWorkMessageIndex.RetAuction_LoveCmd:
                 if(LevelManagerNetTest.Instance.NowItemID == 0) break;
+                LevelManagerNetTest.Instance.NowItemID = 0;
                 Debug.Log("Auction");
                 UIManager.BuyItemSuccess(false , true);
 
-                LevelManagerNetTest.Instance.MyAttackTime++;
-                LevelManagerNetTest.Instance.EnemyAttackTime++;
+                //LevelManagerNetTest.Instance.MyAttackTime++;
+                //LevelManagerNetTest.Instance.EnemyAttackTime++;
                 break;
             //case NetWorkMessageIndex.RetShutScreenReceived_LoveCmd :
             //    if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){

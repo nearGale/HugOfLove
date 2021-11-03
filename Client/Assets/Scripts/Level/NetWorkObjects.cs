@@ -6,34 +6,29 @@ using UnityEngine;
 namespace ProjectNetWork{
     public enum NetWorkMessageIndex{
         ReqSendTryMatch_LoveCmd  	=1,
-	RetMessageMatchSuccess_LoveCmd 	 =2,
-	RetPlayerLogin_LoveCmd			=3,
-	ReqSendTryBuyItem_LoveCmd		 =4,
-	RetMessageSpawnItem_LoveCmd		=5,
-	ReqAttack_LoveCmd 				 =6,
-	RetLookBackSuccess_LoveCmd		 =7,
-	RetMessageSetBattleInfo_LoveCmd	 =8,
-	ReqShutScreen_LoveCmd			 =9,
-	ReqLightScreen_LoveCmd			 =10,
-	ReqCancelAttack_LoveCmd			=11,
-	ReqPlayerLogin_LoveCmd			=12,
-	RetMessageBuyItemSuccess_LoveCmd =13,
-	RetShutScreenReceived_LoveCmd =14,
-	RetLightScreenReceived_LoveCmd =15,
-	RetAttackReceived_LoveCmd		=16,
-	RetCancelAttackReceived_LoveCmd	=17,
-	ReqHeartBag_LoveCmd				=18,
-	RetSetPlayerInfo_LoveCmd		=19,
-	RetBlockSuccess_LoveCmd			=20,
-    RetAuction_LoveCmd				=22,
-    RetPlayerScoreLiST_loveCmd		=23,
-	ReqPlayerScoreList_LoveCmd		=24,
-	ReqPlayerLogout_LoveCmd			=25
-
-
-
-
-
+        RetMessageMatchSuccess_LoveCmd 	 =2,
+        RetPlayerLogin_LoveCmd			=3,
+        ReqSendTryBuyItem_LoveCmd		 =4,
+        RetMessageSpawnItem_LoveCmd		=5,
+        ReqAttack_LoveCmd 				 =6,
+        RetLookBackSuccess_LoveCmd		 =7,
+        RetMessageSetBattleInfo_LoveCmd	 =8,
+        ReqShutScreen_LoveCmd			 =9,
+        ReqLightScreen_LoveCmd			 =10,
+        ReqCancelAttack_LoveCmd			=11,
+        ReqPlayerLogin_LoveCmd			=12,
+        RetMessageBuyItemSuccess_LoveCmd =13,
+        RetShutScreenReceived_LoveCmd =14,
+        RetLightScreenReceived_LoveCmd =15,
+        RetAttackReceived_LoveCmd		=16,
+        RetCancelAttackReceived_LoveCmd	=17,
+        ReqHeartBag_LoveCmd				=18,
+        RetSetPlayerInfo_LoveCmd		=19,
+        RetBlockSuccess_LoveCmd			=20,
+        RetAuction_LoveCmd				=22,
+        RetPlayerScoreLiST_loveCmd		=23,
+        ReqPlayerScoreList_LoveCmd		=24,
+        ReqPlayerLogout_LoveCmd			=25
     }
 
     public enum NetWorkMessageType{
