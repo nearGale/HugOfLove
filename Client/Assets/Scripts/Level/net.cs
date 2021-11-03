@@ -144,7 +144,7 @@ public class net : MonoBehaviour
 
     void TryBlockSuccess(params object[] data){
         NetMessage netMessage = new NetMessage();
-        netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
+        //netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
         netMessage.MessageIndex = NetWorkMessageIndex.ReqLightScreen_LoveCmd;
         Send(netMessage);
