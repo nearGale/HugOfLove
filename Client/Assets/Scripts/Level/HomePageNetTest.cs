@@ -29,6 +29,7 @@ public class HomePageNetTest : MonoBehaviour
     }
 
     void TryConnectServer(){
+        if(LevelManagerNetTest.Instance.global_socket_client  != null ) return;
         Debug.Log(123);
         Thread c_thread = new Thread(ConnectServer);
         c_thread.IsBackground = true;

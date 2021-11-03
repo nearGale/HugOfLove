@@ -80,13 +80,13 @@ public class net : MonoBehaviour
         TryMatch();
 
         GameSetting.Instance.shopItems = new List<ShopItem>{
-         new ShopItem(1 , 800 , "描述1描述1描述1描述1描述1描述1描述1描述1" , Resources.Load<Sprite>("2_M4A1")),
-         new ShopItem(2 , 1200 , "描述2描述2描述2描述2描述2描述2描述2描述2" , Resources.Load<Sprite>("3_USP")),
-         new ShopItem(3 , 2300 , "描述3描述3描述3描述3描述3描述3描述3描述3" , Resources.Load<Sprite>("4_AWM")),
-         new ShopItem(4 , 3200 , "描述4描述4描述4描述4描述4描述4描述4描述4" , Resources.Load<Sprite>("5_M1014")),
-         new ShopItem(5 , 3700 , "描述5描述5描述5描述5描述5描述5描述5描述5" , Resources.Load<Sprite>("6_AK")),
-         new ShopItem(6 , 4200 , "描述6描述6描述6描述6描述6描述6描述6描述6" , Resources.Load<Sprite>("7_UMPSG")),
-         new ShopItem(7 , 4700 , "描述7描述7描述7描述7描述7描述7描述7描述7" , Resources.Load<Sprite>("8_MP5")),
+         new ShopItem(1 , 800 , "全称卡拉什尼科夫1947年式自动步枪，从不卡壳！经典之作！高光返场！\n店铺：米莎的最爱" , Resources.Load<Sprite>("6_AK")),
+         new ShopItem(2 , 1200 , "全塑料设计，你懂的。此时下单附送300发子弹，暴赚不亏！！\n卖家：马克弟弟西姆" , Resources.Load<Sprite>("10_G18")),
+         new ShopItem(3 , 2300 , "想要跑得快吗？买两把吧！风驰般的感觉，追男神利器。\n卖家：凯莉妹妹" , Resources.Load<Sprite>("49_Vector")),
+         new ShopItem(4 , 3200 , "尝试一下最新的流血弹科技吗？官方正版，假一罚三。\n卖家：警官柔拉" , Resources.Load<Sprite>("13_VSS")),
+         new ShopItem(5 , 3700 , "害怕了吗？出发前多备两个，高低多一条命出来。\n卖家：悍匪之家" , Resources.Load<Sprite>("HEAL")),
+         new ShopItem(6 , 4200 , "艺术就是爆炸！艺术就是大星星！！爆炸艺术，暴力美学的艺术。\n卖方：火神殿下" , Resources.Load<Sprite>("gen")),
+         new ShopItem(7 , 4700 , "路见不平，拔刀相助！没有武士刀的武士不是好武士。\n卖方：刀阁下" , Resources.Load<Sprite>("Icon_slot_Katana")),
         };
         Debug.Log(GameSetting.Instance.shopItems[5].Description);
 
