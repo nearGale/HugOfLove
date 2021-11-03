@@ -93,6 +93,7 @@ public class net : MonoBehaviour
         LevelManagerNetTest.Instance.MyAttackTime = 1;
         LevelManagerNetTest.Instance.EnemyAttackTime = 1;
 
+        LevelManagerNetTest.Instance.NowItemID = 0;
         //miniGameObserver.StartRandomMiniGame();
 
 
