@@ -12,15 +12,10 @@ public class PhoneInGame{
     public Text TextItemDesc;
     public Text TextNowMoney;
     public Text TextLookBackTime;
-    public Button ButtonBuy;
-    public Button ButtonShutScreen;
     public Image ImageShutMask;
-    public Image ImageBlockCountDown;
     public Animator ScreenTransSuccess;
     public Animator ScreenTransFail;
     public Animator ScreenTransAlert;
-    public Animator ShutAlert;
-    public Animator CountDown;
 
     public Animator InfoMe;
     public Text Info;
@@ -96,11 +91,9 @@ public class UIManagerNetTest : MonoBehaviour
     
     public void BuyItemSuccess(bool isSuccess , bool isAuction = false){
         if(isSuccess){
-            PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransSuccess.SetTrigger("Trans");
             audioSource.PlayOneShot(AudioCheer);
         }else{
-            PlayerPhone.ButtonBuy.interactable = false;
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
             if(!isAuction) {
                 audioSource.PlayOneShot(AudioFail);
@@ -223,8 +216,6 @@ public class UIManagerNetTest : MonoBehaviour
             LastTickTime = Time.timeSinceLevelLoad;
             StartCoroutine(TickTick(40));
         }
-        
-        PlayerPhone.ImageBlockCountDown.gameObject.SetActive(isBlockCountDown);
         //if(isBlockCountDown){
         //    var a = .1f;
         //    a = (Time.timeSinceLevelLoad - BlockCountDownStartTime) > BlockCountDownDuration ? 0 : 1 - ( (Time.timeSinceLevelLoad - BlockCountDownStartTime) / BlockCountDownDuration);
