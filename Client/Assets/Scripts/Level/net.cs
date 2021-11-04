@@ -481,4 +481,11 @@ public class net : MonoBehaviour
             Debug.Log("未连接");
         }
     }
+
+    private void OnApplicationQuit() {
+        NetMessage netMessage = new NetMessage();
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogout_LoveCmd;
+        Send(netMessage);
+    }
 }

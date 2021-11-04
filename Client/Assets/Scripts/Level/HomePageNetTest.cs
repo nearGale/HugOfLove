@@ -195,4 +195,10 @@ public class HomePageNetTest : MonoBehaviour
         Send(netMessage);
     }
  
+    private void OnApplicationQuit() {
+        NetMessage netMessage = new NetMessage();
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerLogout_LoveCmd;
+        Send(netMessage);
+    }
 }
