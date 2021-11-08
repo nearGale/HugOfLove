@@ -5,6 +5,19 @@ using UnityEngine.UI;
 using ProjectNetWork;
 
 [System.Serializable]
+public class ProBar{
+    public NewProgressBar bar1;
+    public NewProgressBar bar2;
+    public NewProgressBar bar3;
+    public void SetProBar(float f1 , float f2 , float f3){
+        bar1.SetProgressValue(f1);
+        bar2.SetProgressValue(f2);
+        bar3.SetProgressValue(f3);
+
+        Debug.Log(new Vector3(f1,f2,f3));
+    }
+}
+[System.Serializable]
 public class PhoneInGame{
     public RectTransform RootTransform;
     public Image ImageItemPic;
@@ -42,6 +55,8 @@ public struct DebugInGame{
 
 public class UIManagerNetTest : MonoBehaviour
 {
+    public ProBar BarLeft;
+    public ProBar BarRight;
     public List<GameObject> OnMatchHuds;
     
     public AudioSource audioSource;
@@ -115,6 +130,19 @@ public class UIManagerNetTest : MonoBehaviour
         PlayerPhone.ScreenTransAlert.SetTrigger("Trans");
         audioSource.PlayOneShot(AudioSpawn);
         StartShopCountDown();
+
+        if(LevelManagerNetTest.Instance.NowItemID > 0 ){
+            float a = (LevelManagerNetTest.Instance.MyPlayerInfo.Money - GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price) / 10000f;
+            Debug.Log((LevelManagerNetTest.Instance.MyPlayerInfo.Money));
+            Debug.Log(GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price);
+            Debug.Log(LevelManagerNetTest.Instance.NowItemID);
+            float b = LevelManagerNetTest.Instance.MyPlayerInfo.Money / 10000f;
+            BarRight.SetProBar(0.1f , a , b);
+
+            a = (LevelManagerNetTest.Instance.EnemyPlayerInfo.Money - GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price) / 10000f;
+            b = LevelManagerNetTest.Instance.EnemyPlayerInfo.Money / 10000f;
+            BarLeft.SetProBar(0.1f , a , b);
+        }
         
     }
     public void OnPlayError(params object[] data){
@@ -186,12 +214,16 @@ public class UIManagerNetTest : MonoBehaviour
         audioSource.PlayOneShot(AudioCheer);
 
         EventCenter.Instance.EventAddListener(EventCenterType.PlayerErrorAudio , OnPlayError);
+
+        BarLeft.SetProBar(1,1,1);
+        BarRight.SetProBar(1,1,1);
+
     }
 
     IEnumerator TickTick(int frame){
         for (float i = 0; i < frame; i++)
         {
-            float k = 1.07f;
+            float k = 1.01f;
             float z;
             if( i < frame /2){
                 z = 1 + (k - 1) * ( i / (frame / 2));

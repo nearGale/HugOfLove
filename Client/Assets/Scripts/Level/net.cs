@@ -42,6 +42,7 @@ public class LevelManagerNetTest : Single<LevelManagerNetTest>
     public int EnemyAttackTime = 1;
     public int MyAttackTime = 1;
     public bool HaveLogin = false;
+    public string NowRank = "";
 }
 
 public class net : MonoBehaviour
@@ -88,7 +89,6 @@ public class net : MonoBehaviour
          new ShopItem(6 , 4200 , "艺术就是爆炸！艺术就是大星星！！爆炸艺术，暴力美学的艺术。\n卖方：火神殿下" , Resources.Load<Sprite>("gen")),
          new ShopItem(7 , 4700 , "路见不平，拔刀相助！没有武士刀的武士不是好武士。\n卖方：刀阁下" , Resources.Load<Sprite>("Icon_slot_Katana")),
         };
-        Debug.Log(GameSetting.Instance.shopItems[5].Description);
 
         LevelManagerNetTest.Instance.MyAttackTime = 1;
         LevelManagerNetTest.Instance.EnemyAttackTime = 1;
@@ -143,6 +143,14 @@ public class net : MonoBehaviour
     }
 
     void TryBlockSuccess(params object[] data){
+        LevelManagerNetTest.Instance.IsMyScreenShut = false;
+
+        UIManager.AniBoth.SetBool("active" , true);
+        UIManager.AniMe.SetBool("active" , false);
+        UIManager.AniEne.SetBool("active" , false);
+
+        LevelManagerNetTest.Instance.IsEnemyAttacking = false;
+
         NetMessage netMessage = new NetMessage();
         //netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -357,14 +365,14 @@ public class net : MonoBehaviour
                 break;
             case NetWorkMessageIndex.RetLightScreenReceived_LoveCmd:
                 if(netMessage.PlayerMail == LevelManagerNetTest.Instance.MyPlayerMail){
-                    LevelManagerNetTest.Instance.IsMyScreenShut = false;
-
-                    UIManager.AniBoth.SetBool("active" , true);
-                    UIManager.AniMe.SetBool("active" , false);
-                    UIManager.AniEne.SetBool("active" , false);
-
-                    LevelManagerNetTest.Instance.IsEnemyAttacking = false;
-
+                    //LevelManagerNetTest.Instance.IsMyScreenShut = false;
+//
+                    //UIManager.AniBoth.SetBool("active" , true);
+                    //UIManager.AniMe.SetBool("active" , false);
+                    //UIManager.AniEne.SetBool("active" , false);
+//
+                    //LevelManagerNetTest.Instance.IsEnemyAttacking = false;
+//
                 }else if(netMessage.PlayerMail == LevelManagerNetTest.Instance.EnemyPlayerMail){
                     LevelManagerNetTest.Instance.IsEnemyScreenShut = false;
                     UIManager.EnemyPhoneAnimator.SetBool("Light" , true);

@@ -17,6 +17,7 @@ public class HomePageNetTest : MonoBehaviour
     }
 
     void TryLogin(){
+        if(!(LevelManagerNetTest.Instance.MyPlayerMail.Contains("garena.cn") || LevelManagerNetTest.Instance.MyPlayerMail.Contains("garena.com")))  return;
         if(!LevelManagerNetTest.Instance.HaveLogin){
             NetMessage netMessage = new NetMessage();  
             netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -134,6 +135,8 @@ public class HomePageNetTest : MonoBehaviour
             homePageUIManager.NameInputField.text =  LevelManagerNetTest.Instance.MyPlayerName.ToString();
         }
 
+        if(LevelManagerNetTest.Instance.NowRank != "")    homePageUIManager.ScoreList.text = LevelManagerNetTest.Instance.NowRank;
+
     }
 
     void TryGetScore(){
@@ -182,6 +185,7 @@ public class HomePageNetTest : MonoBehaviour
                 }
 
                 homePageUIManager.ScoreList.text = t;
+                LevelManagerNetTest.Instance.NowRank = t;
                 break;
             default:break;
         }
