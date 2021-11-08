@@ -78,7 +78,7 @@ public class EasyMiniGame : BasicMiniGame
             InputList.Add((int)(currentKey));
             if(CharList[ InputList.Count - 1 ] == InputList[ InputList.Count - 1 ]-32   ){
                 StartCoroutine(shake(20));
-                if(CharList.Count == InputList.Count)   {
+                if(CharList.Count <= InputList.Count)   {
                     TextAni.SetTrigger("beat");
                     Invoke("Success" , 0.8f);
                     CanInput = false;
@@ -106,6 +106,10 @@ public class EasyMiniGame : BasicMiniGame
             b = b + (char)item;
         }
         TextInputList.text = b.ToUpper();
+
+        Debug.Log(InputList);
+        Debug.Log(TextCharList);
+
 
     }
     public override void Success(){

@@ -131,10 +131,27 @@ public class net : MonoBehaviour
         Send(netMessage);
     }
     void TryBuyItem(params object[] data){
-        if(!(LevelManagerNetTest.Instance.nowState == LevelMatchState.Gaming))  return;
-        if(UIManager.ShopCountDownTime >= 0 )    return;
-        if(LevelManagerNetTest.Instance.IsEnemyAttacking == true)   return;
-        if(LevelManagerNetTest.Instance.NowItemID <= 0) return;
+        if(!(LevelManagerNetTest.Instance.nowState == LevelMatchState.Gaming))  {
+            Debug.Log(LevelManagerNetTest.Instance.nowState);
+            return;
+        }
+        if(UIManager.ShopCountDownTime >= 0 )    {
+            Debug.Log("ERRTime:" + UIManager.ShopCountDownTime.ToString());
+            return;
+        }
+        if(LevelManagerNetTest.Instance.IsEnemyAttacking == true)   {
+            Debug.Log("EnemyAttacking!");
+            return;
+        }
+        if(LevelManagerNetTest.Instance.NowItemID <= 0) {
+            Debug.Log("ERRID" + LevelManagerNetTest.Instance.NowItemID.ToString());
+            return;
+        }
+        if(LevelManagerNetTest.Instance.MyPlayerInfo.Money < GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price){
+            UIManager.OnBuyError();
+            Debug.Log(string.Format("No Money:{0}   {1}" , LevelManagerNetTest.Instance.MyPlayerInfo.Money , GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price));
+            return;
+        }
         NetMessage netMessage = new NetMessage();
         netMessage.ItemID = LevelManagerNetTest.Instance.NowItemID;
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -276,8 +293,8 @@ public class net : MonoBehaviour
 
 
     public void ShowPlayerInfo(){
-        UIManager.PlayerPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.MyPlayerName , LevelManagerNetTest.Instance.MyPlayerRank);
-        UIManager.EnemyPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.EnemyPlayerName , LevelManagerNetTest.Instance.EnemyPlayerRank);
+        UIManager.PlayerPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.MyPlayerName , LevelManagerNetTest.Instance.MyPlayerRank <= 0 ? "未上榜":LevelManagerNetTest.Instance.MyPlayerRank.ToString() );
+        UIManager.EnemyPhone.Info.text = string.Format("玩家名：{0}\n排名：#{1}",LevelManagerNetTest.Instance.EnemyPlayerName , LevelManagerNetTest.Instance.EnemyPlayerRank <= 0 ? "未上榜":LevelManagerNetTest.Instance.EnemyPlayerRank.ToString() );
 
 
         UIManager.PlayerPhone.InfoRoot.SetActive(true);

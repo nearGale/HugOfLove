@@ -55,6 +55,7 @@ public struct DebugInGame{
 
 public class UIManagerNetTest : MonoBehaviour
 {
+    public List<ParticleSystem> par;
     public ProBar BarLeft;
     public ProBar BarRight;
     public List<GameObject> OnMatchHuds;
@@ -65,6 +66,7 @@ public class UIManagerNetTest : MonoBehaviour
     public AudioClip AudioSpawn;
     public AudioClip AudioAuction;
     public AudioClip AudioError;
+    public AudioClip AudioErrorBig;
     float LastTickTime = 0;
     public PhoneInGame PlayerPhone = new PhoneInGame();
     public PhoneInGame EnemyPhone = new PhoneInGame();
@@ -90,7 +92,7 @@ public class UIManagerNetTest : MonoBehaviour
     public Text TextEnemyMoney;
     public Text TextCountDown;
     public Animator AniCountDown;
-    Animator MyMoneyBeat;
+    public Animator MyMoneyBeat;
     public Text TextMyMoneyBeat;
     public Text TextMyMoney;
 
@@ -108,6 +110,10 @@ public class UIManagerNetTest : MonoBehaviour
         if(isSuccess){
             PlayerPhone.ScreenTransSuccess.SetTrigger("Trans");
             audioSource.PlayOneShot(AudioCheer);
+            foreach (var item in par)
+            {
+                item.Play();
+            }
         }else{
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
             if(!isAuction) {
@@ -156,7 +162,7 @@ public class UIManagerNetTest : MonoBehaviour
 
     public void SetPlayerInfo(bool isSelf , int deltaMoney){
         if(deltaMoney ==0)  return;
-        string d = deltaMoney >= 0 ?"+":"-" + deltaMoney.ToString();
+        string d = deltaMoney >= 0 ?"+":"" + deltaMoney.ToString();
         if(isSelf){
             MyMoneyBeat.SetTrigger("Beat");
             TextMyMoneyBeat.text = d;
@@ -218,6 +224,11 @@ public class UIManagerNetTest : MonoBehaviour
         BarLeft.SetProBar(1,1,1);
         BarRight.SetProBar(1,1,1);
 
+    }
+
+    public void OnBuyError(){
+        audioSource.PlayOneShot(AudioErrorBig);
+        MyMoneyBeat.SetTrigger("BeatErr");
     }
 
     IEnumerator TickTick(int frame){
