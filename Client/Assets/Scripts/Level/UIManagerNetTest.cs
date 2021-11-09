@@ -10,7 +10,7 @@ public class ProBar{
     public NewProgressBar bar2;
     public NewProgressBar bar3;
     public void SetProBar(float f1 , float f2 , float f3){
-        bar1.SetProgressValue(f1);
+        //bar1.SetProgressValue(f1);
         bar2.SetProgressValue(f2);
         bar3.SetProgressValue(f3);
         //if(f1 >= .1f)   bar1.GetComponent<Animator>().SetBool("Blink" , false);
