@@ -15,6 +15,10 @@ public class ProBar{
         bar3.SetProgressValue(f3);
         
         bar3.GetComponent<Animator>().SetBool("Blink" , f2>=0);
+        bar2.GetComponent<Animator>().SetBool("Blink" , f2<.1f&&f2 > 0);
+        if( f2<.1f&&f2 > 0){
+            bar2.SetProgressValue(0);
+        }
 
         //if(f1 >= .1f)   bar1.GetComponent<Animator>().SetBool("Blink" , false);
     }
