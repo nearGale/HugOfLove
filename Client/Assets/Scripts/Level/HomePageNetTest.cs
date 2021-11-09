@@ -11,6 +11,7 @@ public class HomePageNetTest : MonoBehaviour
 {
     public HomePageUIManager homePageUIManager;
     public Queue MessageQueue = new Queue();
+    public RankTable table;
 
     void TryMatch(){
         SceneManager.LoadScene("Scene2In1");
@@ -30,7 +31,10 @@ public class HomePageNetTest : MonoBehaviour
     }
 
     void TryConnectServer(){
-        if(LevelManagerNetTest.Instance.global_socket_client  != null ) return;
+        if(LevelManagerNetTest.Instance.global_socket_client  != null ) {
+            RefreshList();
+            return;
+        }
         Debug.Log(123);
         Thread c_thread = new Thread(ConnectServer);
         c_thread.IsBackground = true;
@@ -139,6 +143,14 @@ public class HomePageNetTest : MonoBehaviour
 
     }
 
+    void RefreshList(){
+        NetMessage netMessage = new NetMessage();  
+        netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
+        netMessage.PlayerName = LevelManagerNetTest.Instance.MyPlayerName;
+        netMessage.MessageIndex = NetWorkMessageIndex.ReqPlayerScoreList_LoveCmd;
+        Send(netMessage);
+    }
+
     void TryGetScore(){
         NetMessage netMessage = new NetMessage();
         netMessage.PlayerMail = LevelManagerNetTest.Instance.MyPlayerMail;
@@ -178,14 +190,22 @@ public class HomePageNetTest : MonoBehaviour
             case NetWorkMessageIndex.RetPlayerScoreLiST_loveCmd:
                 string t = "";
                 int i = 0;
+                table.Clear();
+                t += string.Format("{0}  {1}  {2}\n" , "排名", "邮箱" , "排位分");
+                table.AddLine( "排名", "邮箱" , "排位分");
+                Debug.Log(netMessage.PlayerScoreList.Count);
                 foreach (SqlUser item in netMessage.PlayerScoreList)
                 {
                     i++;
-                    t += string.Format("#{0} {1} {2}\n" , i.ToString() , item.Name , item.Score.ToString());
+                    string z = item.Email;
+                    if(item.Email.Contains("@"))    z = item.Email.Split('@')[0];
+                    t += string.Format("#{0}  {1}  {2}\n" , i.ToString() , item.Name , item.AverageScore.ToString());
+                    table.AddLine(i.ToString() , item.Name , item.AverageScore.ToString());
                 }
+                Debug.Log(t);
 
-                homePageUIManager.ScoreList.text = t;
-                LevelManagerNetTest.Instance.NowRank = t;
+                //homePageUIManager.ScoreList.text = t;
+                //LevelManagerNetTest.Instance.NowRank = t;
                 break;
             default:break;
         }

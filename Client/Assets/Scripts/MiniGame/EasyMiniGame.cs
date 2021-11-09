@@ -58,13 +58,16 @@ public class EasyMiniGame : BasicMiniGame
     }
 
     IEnumerator shake(int frame){
+        float a = .12f;
+        Vector3 aa = transform.position;
         for (float i = 0; i < frame; i++)
         {
             if(i%5 == 0){
-                transform.position += new Vector3(Random.Range(-10 , 10) , Random.Range(-10 , 10) , 0);
+                transform.position += new Vector3(Random.Range(-a , a) , Random.Range(-a , a) , 0);
             }
             yield return null;//表示下一帧再继续执行后面的代码
         }
+        //transform.position = aa;
     }
 
 

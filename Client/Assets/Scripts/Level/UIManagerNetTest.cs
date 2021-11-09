@@ -13,7 +13,7 @@ public class ProBar{
         bar1.SetProgressValue(f1);
         bar2.SetProgressValue(f2);
         bar3.SetProgressValue(f3);
-
+        //if(f1 >= .1f)   bar1.GetComponent<Animator>().SetBool("Blink" , false);
         Debug.Log(new Vector3(f1,f2,f3));
     }
 }
@@ -113,6 +113,7 @@ public class UIManagerNetTest : MonoBehaviour
             foreach (var item in par)
             {
                 item.Play();
+                
             }
         }else{
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
