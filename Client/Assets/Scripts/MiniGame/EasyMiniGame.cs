@@ -15,6 +15,7 @@ public class EasyMiniGame : BasicMiniGame
     public override void Start()
     {
         base.Start();
+        CanInput= true;
         for (int i = 0; i < CodeLength; i++)
         {
             CharList.Add(
@@ -90,11 +91,11 @@ public class EasyMiniGame : BasicMiniGame
             }
         }
 
-        if(CharList.Count <= InputList.Count)   {
-                    TextAni.SetTrigger("beat");
-                    Invoke("Success" , 0.8f);
-                    CanInput = false;
-                }
+        if(CharList.Count <= InputList.Count && CanInput)   {
+            TextAni.SetTrigger("beat");
+            Invoke("Success" , 0.8f);
+            CanInput = false;
+        }
     
 
         string a = "";
