@@ -15,6 +15,7 @@ public class EasyMiniGame : BasicMiniGame
     public override void Start()
     {
         base.Start();
+        CanInput= true;
         for (int i = 0; i < CodeLength; i++)
         {
             CharList.Add(
@@ -75,22 +76,25 @@ public class EasyMiniGame : BasicMiniGame
     {
         KeyCode keyCode = GetKeyCode();
         if (keyCode == KeyCode.None || CanInput == false){
-            return;
+            //return;
         }else{
             KeyCode currentKey = keyCode;
             InputList.Add((int)(currentKey));
-            if(CharList[ InputList.Count - 1 ] == InputList[ InputList.Count - 1 ]-32   ){
+
+            //匹配
+            if(CharList[ InputList.Count - 1 ] == InputList[ InputList.Count - 1 ]-32 || CharList[ InputList.Count - 1 ] == InputList[ InputList.Count - 1 ]){
                 StartCoroutine(shake(20));
-                if(CharList.Count <= InputList.Count)   {
-                    TextAni.SetTrigger("beat");
-                    Invoke("Success" , 0.8f);
-                    CanInput = false;
-                }
             }else{
                 InputList = new List<int>();
                 TextAni.SetTrigger("beat2");
                 EventCenter.Instance.EventTrigger(EventCenterType.PlayerErrorAudio );
             }
+        }
+
+        if(CharList.Count <= InputList.Count && CanInput)   {
+            TextAni.SetTrigger("beat");
+            Invoke("Success" , 0.8f);
+            CanInput = false;
         }
     
 
@@ -112,7 +116,6 @@ public class EasyMiniGame : BasicMiniGame
 
         Debug.Log(InputList);
         Debug.Log(TextCharList);
-
 
     }
     public override void Success(){

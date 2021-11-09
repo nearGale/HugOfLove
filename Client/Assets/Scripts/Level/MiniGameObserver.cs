@@ -25,6 +25,7 @@ public class MiniGameObserver : MonoBehaviour
     }
 
     public void StartRandomMiniGame(){
+
         GameObject o =  Instantiate(MiniGameList[0] , parent:MiniGameCanvas.transform);
         nowMiniGame = o.GetComponent<BasicMiniGame>();
     }
