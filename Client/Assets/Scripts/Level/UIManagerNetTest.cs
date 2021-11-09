@@ -13,8 +13,10 @@ public class ProBar{
         //bar1.SetProgressValue(f1);
         bar2.SetProgressValue(f2);
         bar3.SetProgressValue(f3);
+        
+        bar3.GetComponent<Animator>().SetBool("Blink" , f2>=0);
+
         //if(f1 >= .1f)   bar1.GetComponent<Animator>().SetBool("Blink" , false);
-        Debug.Log(new Vector3(f1,f2,f3));
     }
 }
 [System.Serializable]
