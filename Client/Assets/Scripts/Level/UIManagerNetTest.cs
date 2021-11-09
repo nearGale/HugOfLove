@@ -109,7 +109,10 @@ public class UIManagerNetTest : MonoBehaviour
     public void BuyItemSuccess(bool isSuccess , bool isAuction = false){
         if(isSuccess){
             PlayerPhone.ScreenTransSuccess.SetTrigger("Trans");
-            audioSource.PlayOneShot(AudioCheer);
+            if (audioSource != null && AudioCheer != null)
+            {
+                audioSource.PlayOneShot(AudioCheer);
+            }
             foreach (var item in par)
             {
                 item.Play();
@@ -117,10 +120,17 @@ public class UIManagerNetTest : MonoBehaviour
             }
         }else{
             PlayerPhone.ScreenTransFail.SetTrigger("Trans");
-            if(!isAuction) {
-                audioSource.PlayOneShot(AudioFail);
+            if(!isAuction)
+            {
+                if (audioSource != null && AudioFail != null)
+                {
+                    audioSource.PlayOneShot(AudioFail);
+                }
             }else{
-                audioSource.PlayOneShot(AudioAuction);
+                if (audioSource != null && AudioAuction != null)
+                {
+                    audioSource.PlayOneShot(AudioAuction);
+                }
             }
         }
 
@@ -135,7 +145,10 @@ public class UIManagerNetTest : MonoBehaviour
         PlayerPhone.TextItemPrice.text = "$" +GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Price.ToString();
         PlayerPhone.ImageItemPic.sprite = GameSetting.Instance.GetShopItemByID(LevelManagerNetTest.Instance.NowItemID).Icon;
         PlayerPhone.ScreenTransAlert.SetTrigger("Trans");
-        audioSource.PlayOneShot(AudioSpawn);
+        if (audioSource != null && AudioSpawn != null)
+        {
+            audioSource.PlayOneShot(AudioSpawn);
+        }
         StartShopCountDown();
 
         if(LevelManagerNetTest.Instance.NowItemID > 0 ){
@@ -153,7 +166,14 @@ public class UIManagerNetTest : MonoBehaviour
         
     }
     public void OnPlayError(params object[] data){
-        audioSource.PlayOneShot(AudioError);
+        if (audioSource != null && AudioError != null)
+        {
+            audioSource.PlayOneShot(AudioError);
+        }
+        else
+        {
+            Debug.LogError("audioSource != null :" + (audioSource != null) + "  " + "AudioError != null : " + (AudioError != null));
+        }
     }
 
     public void StartShopCountDown(){
@@ -218,7 +238,10 @@ public class UIManagerNetTest : MonoBehaviour
 
         LastTickTime = Time.timeSinceLevelLoad;
 
-        audioSource.PlayOneShot(AudioCheer);
+        if (audioSource != null && AudioCheer != null)
+        {
+            audioSource.PlayOneShot(AudioCheer);
+        }
 
         EventCenter.Instance.EventAddListener(EventCenterType.PlayerErrorAudio , OnPlayError);
 

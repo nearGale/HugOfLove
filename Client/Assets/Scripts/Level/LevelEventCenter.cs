@@ -70,4 +70,9 @@ public class EventCenter :Single<EventCenter>
             eventsDictonary[eventName].Invoke(data);
         }
     }
+
+    public void Clear()
+    {
+        eventsDictonary.Clear();
+    }
 }

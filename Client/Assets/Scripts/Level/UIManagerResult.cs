@@ -22,7 +22,9 @@ public class UIManagerResult : MonoBehaviour
         
     }
 
-    public void Restart(){
+    public void Restart()
+    {
+        EventCenter.Instance.Clear();
         SceneManager.LoadScene("HomePage");
     }
 
